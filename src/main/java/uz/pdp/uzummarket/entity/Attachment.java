@@ -20,7 +20,6 @@ public class Attachment extends BaseEntity{
     private String name;
     private String contentType;
     private byte[] bytes;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id" , referencedColumnName = "id")
-    private Category categories;
+
+
 }

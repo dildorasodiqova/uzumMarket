@@ -16,6 +16,8 @@ import java.util.UUID;
 @Entity(name= "category")
 public class Category extends BaseEntity{
     private String name;
-    @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL)
-    private List<Attachment> attachments;
+    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private Attachment photo;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Category parent;
 }

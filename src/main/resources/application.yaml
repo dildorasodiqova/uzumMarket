@@ -13,7 +13,7 @@ spring:
   datasource:
     url:  jdbc:postgresql://localhost:5432/UzumMarket
     username: postgres
-    password:  2004
+    password:  2006
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
