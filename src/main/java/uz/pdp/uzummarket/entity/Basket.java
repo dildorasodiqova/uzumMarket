@@ -11,5 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name= "bucket")
-public class Bucket extends BaseEntity{
+public class Basket extends BaseEntity{
+
 }
