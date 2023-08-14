@@ -12,4 +12,5 @@ import lombok.Setter;
 @Setter
 @Entity(name= "product")
 public class Product extends BaseEntity{
+    private
 }
