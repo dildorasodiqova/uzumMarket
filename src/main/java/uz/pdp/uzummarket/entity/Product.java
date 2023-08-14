@@ -2,14 +2,12 @@ package uz.pdp.uzummarket.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Getter
 @Setter
@@ -25,5 +23,5 @@ public class Product extends BaseEntity{
     private Category category;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "products")
     @JsonIgnore
-    private List<Bucket> buckets;
+    private List<Basket> buckets;
 }
