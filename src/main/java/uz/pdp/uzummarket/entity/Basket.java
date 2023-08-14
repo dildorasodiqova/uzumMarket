@@ -1,5 +1,4 @@
 package uz.pdp.uzummarket.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name= "bucket")
-public class Bucket extends BaseEntity{
+public class Basket extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
