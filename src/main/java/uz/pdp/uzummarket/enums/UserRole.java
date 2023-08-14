@@ -1,4 +1,4 @@
-package uz.pdp.uzummarket.entity;
+package uz.pdp.uzummarket.enums;
 
 public enum UserRole {
     ADMIN,
