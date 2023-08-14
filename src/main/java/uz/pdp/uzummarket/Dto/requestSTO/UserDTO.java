@@ -1,4 +1,4 @@
-package uz.pdp.uzummarket.requestSTO;
+package uz.pdp.uzummarket.Dto.requestSTO;
 
 import lombok.Getter;
 import lombok.Setter;

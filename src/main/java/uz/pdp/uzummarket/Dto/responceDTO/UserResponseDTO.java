@@ -1,4 +1,4 @@
-package uz.pdp.uzummarket.responceDTO;
+package uz.pdp.uzummarket.Dto.responceDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

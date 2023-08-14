@@ -3,8 +3,8 @@ package uz.pdp.uzummarket.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.uzummarket.requestSTO.UserDTO;
-import uz.pdp.uzummarket.responceDTO.UserResponseDTO;
+import uz.pdp.uzummarket.Dto.requestSTO.UserDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
 import uz.pdp.uzummarket.service.userService.UserService;
 
 import java.util.List;
