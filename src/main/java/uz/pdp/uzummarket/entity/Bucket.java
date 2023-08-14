@@ -1,10 +1,12 @@
 package uz.pdp.uzummarket.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,4 +14,9 @@ import lombok.Setter;
 @Setter
 @Entity(name= "bucket")
 public class Bucket extends BaseEntity{
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Product> products;
 }
