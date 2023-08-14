@@ -1,9 +1,8 @@
 package uz.pdp.uzummarket.service.userService;
 
 import uz.pdp.uzummarket.entity.User;
-import uz.pdp.uzummarket.repository.UserRepository;
-import uz.pdp.uzummarket.requestSTO.UserDTO;
-import uz.pdp.uzummarket.responceDTO.UserResponseDTO;
+import uz.pdp.uzummarket.Dto.requestSTO.UserDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
 
 import java.util.List;
 import java.util.UUID;

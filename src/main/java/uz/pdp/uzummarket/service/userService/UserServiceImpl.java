@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.pdp.uzummarket.entity.User;
 import uz.pdp.uzummarket.repository.UserRepository;
-import uz.pdp.uzummarket.requestSTO.UserDTO;
-import uz.pdp.uzummarket.responceDTO.UserResponseDTO;
+import uz.pdp.uzummarket.Dto.requestSTO.UserDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
