@@ -11,15 +11,14 @@
 
 spring:
   datasource:
-    url:  jdbc:postgresql://localhost:5432/UzumMarket
+    url:  jdbc:postgresql://localhost:5432/uzumMarket
     username: postgres
-    password:  2006
+    password:  2004
     driver-class-name: org.postgresql.Driver
   jpa:
-    hibernate:
-      ddl-auto: update
     properties:
       hibernate:
+        ddl-auto: update
         format_sql: true
         dialect: true
     show-sql: true
