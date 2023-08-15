@@ -29,7 +29,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public byte[] downloadImage(String fileName) {
+    public byte[] downloadImage(String fileName) throws RuntimeException {
         Optional<Attachment>  dbAttachment = attachmentRepository.findByName(fileName);
         byte[] images = ImageUtils.decompressImage(dbAttachment.get().getImageDate());
         return images;

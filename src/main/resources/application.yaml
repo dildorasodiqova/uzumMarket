@@ -20,5 +20,5 @@ spring:
       hibernate:
         ddl-auto: update
         format_sql: true
-        dialect: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
