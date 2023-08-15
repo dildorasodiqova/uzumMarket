@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
-    Optional<Category> getCategoryBy(UUID id);
+    Optional<Category> getCategoryById(UUID id);
 }

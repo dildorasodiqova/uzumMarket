@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponseDto> getAll(int size, int page) {
+    public Page<ProductResponseDto > getAll(int size, int page) {
         Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
         List<ProductResponseDto> responseDtos = new ArrayList<>();
         for (Product product : all.getContent()) {

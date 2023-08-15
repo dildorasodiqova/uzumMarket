@@ -29,7 +29,7 @@ return null;
     }
     @Override
     public Category getById(UUID categoryId) {
-        Optional<Category> categoryBy = categoryRepository.getCategoryBy(categoryId);
+        Optional<Category> categoryBy = categoryRepository.getCategoryById(categoryId);
         return categoryBy.orElseThrow(() -> new DataNotFoundException("Category not found"));
     }
 
