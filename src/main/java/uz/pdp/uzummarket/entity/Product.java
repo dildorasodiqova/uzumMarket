@@ -7,21 +7,21 @@ import lombok.*;
 import java.util.List;
 
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity(name= "product")
 public class Product extends BaseEntity{
     @Column(unique = true)
     private String name;
     private String description;
+
+    @Column(nullable = false)
     private Double price;
+
+    @Column(nullable = false)
     private Integer count;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id",referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Category category;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "products")
-    @JsonIgnore
-    private List<Basket> buckets;
 }

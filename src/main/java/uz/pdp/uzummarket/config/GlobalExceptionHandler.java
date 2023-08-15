@@ -10,7 +10,7 @@ import uz.pdp.uzummarket.exception.DataNotFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = DataNotFoundException.class)
-    public ResponseEntity<ErrorDto> datanotfound(DataNotFoundException e){
+    public ResponseEntity<ErrorDto> dataNotfound(DataNotFoundException e){
         ErrorDto errorDto = new ErrorDto(e.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(errorDto.status()).body(errorDto);
     }
