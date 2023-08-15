@@ -2,6 +2,7 @@ package uz.pdp.uzummarket.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,4 +22,6 @@ public class Category extends BaseEntity{
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Category parent;
+
+    private boolean isActive = true;
 }

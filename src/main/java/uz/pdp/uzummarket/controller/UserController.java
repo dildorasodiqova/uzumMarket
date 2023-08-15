@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<UserResponseDTO>> getAll( @RequestParam(defaultValue = "1") Long page,
+    public ResponseEntity<List<UserResponseDTO>> getAll( @RequestParam(defaultValue = "0") Long page,
                                                          @RequestParam(defaultValue = "10") Long size){
         return ResponseEntity.ok(userService.getAll(page,size));
     }

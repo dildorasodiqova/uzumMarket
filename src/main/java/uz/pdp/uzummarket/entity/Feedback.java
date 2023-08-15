@@ -22,6 +22,6 @@ public class Feedback extends BaseEntity {
     private int rate;
 
     @Column(nullable = false)
-    private String text;
+    private String text; 
 
 }
