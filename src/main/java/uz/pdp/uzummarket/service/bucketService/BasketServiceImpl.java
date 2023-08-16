@@ -5,9 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import uz.pdp.uzummarket.Dto.requestSTO.BasketDTO;
-import uz.pdp.uzummarket.Dto.requestSTO.CategoryDTO;
-import uz.pdp.uzummarket.Dto.requestSTO.ProductRequestDto;
+import uz.pdp.uzummarket.Dto.requestSTO.ProductCreateDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BasketResponseDTO;
 import uz.pdp.uzummarket.entity.Basket;
 import uz.pdp.uzummarket.entity.Category;
 import uz.pdp.uzummarket.entity.Product;
@@ -26,12 +25,12 @@ public class BasketServiceImpl implements BasketService {
     private final ModelMapper modelMapper;
 
     @Override
-    public BasketDTO getById(UUID basketId) {
+    public BasketResponseDTO getById(UUID basketId) {
         Basket byId = basketRepository.getById(basketId);
         List<Product> products = byId.getProducts();
-        List<ProductRequestDto> list = new ArrayList<>();
+        List<ProductCreateDTO> list = new ArrayList<>();
         for (Product product : products) {
-            ProductRequestDto productRequestDto = new ProductRequestDto();
+            ProductCreateDTO productRequestDto = new ProductCreateDTO();
             productRequestDto.setCategoryId(product.getCategory().getId());
             productRequestDto.setName(product.getName());
             productRequestDto.setCount(product.getCount());
@@ -40,8 +39,9 @@ public class BasketServiceImpl implements BasketService {
             list.add(productRequestDto);
         }
 
-        BasketDTO basketDTO = new BasketDTO();
+        BasketResponseDTO basketDTO = new BasketResponseDTO();
         basketDTO.setProducts(list);
+        basketDTO.setId(byId.getId());
         basketDTO.setUserId(byId.getUser().getId());
 
         if (basketDTO == null){
@@ -51,14 +51,14 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public List<BasketDTO> getAll(Long page, Long size) {
+    public List<BasketResponseDTO> getAll(Long page, Long size) {
         Page<Basket> all = basketRepository.findAll(PageRequest.of(page.intValue(), size.intValue()));
         List<Basket> content = all.getContent();
-        List<ProductRequestDto> productRequestDtos = new ArrayList<>();
-        List<BasketDTO> list = new ArrayList<>();
+        List<ProductCreateDTO> productRequestDtos = new ArrayList<>();
+        List<BasketResponseDTO> list = new ArrayList<>();
         for (Basket basket : content) {
             for (Product product : basket.getProducts()) {
-                ProductRequestDto product1 = new ProductRequestDto();
+                ProductCreateDTO product1 = new ProductCreateDTO();
                 product1.setDescription(product.getDescription());
                 product1.setName(product.getName());
                 product1.setCount(product.getCount());
@@ -66,7 +66,7 @@ public class BasketServiceImpl implements BasketService {
                 product1.setCategoryId(product.getCategory().getId());
                 productRequestDtos.add(product1);
             }
-            BasketDTO basketDTO = new BasketDTO();
+            BasketResponseDTO basketDTO = new BasketResponseDTO();
             basketDTO.setProducts(productRequestDtos);
             basketDTO.setUserId(basket.getUser().getId());
             list.add(basketDTO);

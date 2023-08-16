@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class BasketDTO {
+public class BasketCreateDTO {
     private UUID userId;
-    private List<ProductRequestDto> products;
+    private List<ProductCreateDTO> products;
 }

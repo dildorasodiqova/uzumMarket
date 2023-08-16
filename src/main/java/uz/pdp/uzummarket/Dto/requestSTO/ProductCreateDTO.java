@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ProductRequestDto {
+public class ProductCreateDTO {
     private String name;
     private String description;
     private Double price;

@@ -15,8 +15,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CategoryDTO {
+public class CategoryCreateDTO {
     private String name;
     private UUID photoId;
-//    private Category parent;
+    private UUID parentId;
+    private boolean active;
 }

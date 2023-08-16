@@ -9,6 +9,7 @@ import uz.pdp.uzummarket.util.ImageUtils;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,21 +18,18 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentRepository attachmentRepository;
 
     @Override
-    public String uploadImage(MultipartFile file) throws IOException {
+    public UUID uploadImage(MultipartFile file) throws IOException {
         Attachment attachment = attachmentRepository.save(Attachment.builder()
                 .name(file.getOriginalFilename())
                 .contentType(file.getContentType())
-                .imageDate(ImageUtils.compressImage(file.getBytes())).build());
-        if (attachment != null) {
-            return "file upload successfully";
-        }
-        return null;
+                .size(file.getSize())
+                .bytes(file.getBytes()).build());
+
+        return attachment.getId();
     }
 
     @Override
-    public byte[] downloadImage(String fileName) throws RuntimeException {
-        Optional<Attachment>  dbAttachment = attachmentRepository.findByName(fileName);
-        byte[] images = ImageUtils.decompressImage(dbAttachment.get().getImageDate());
-        return images;
+    public Attachment downloadImage(UUID fileId) throws RuntimeException {
+        return attachmentRepository.findById(fileId).orElseThrow();
     }
 }
