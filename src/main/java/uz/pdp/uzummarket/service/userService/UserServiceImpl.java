@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.pdp.uzummarket.entity.User;
 import uz.pdp.uzummarket.repository.UserRepository;
-import uz.pdp.uzummarket.Dto.requestSTO.UserDTO;
+import uz.pdp.uzummarket.Dto.requestSTO.UserCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService{
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     @Override
-    public UserResponseDTO create(UserDTO userDTO) {
-        User map = modelMapper.map(userDTO, User.class);
+    public UserResponseDTO create(UserCreateDTO userCreateDTO) {
+        User map = modelMapper.map(userCreateDTO, User.class);
         User save = userRepository.save(map);
         return   modelMapper.map(save, UserResponseDTO.class);
     }

@@ -14,9 +14,10 @@ import java.util.List;
 public class Attachment extends BaseEntity{
     private String name;
     private String contentType;
+    private long size;
     @Lob
-    @Column(name = "imagedate", length = 1000)
-    private byte[] imageDate;
+    @Column(name = "bytes")
+    private byte[] bytes;
 
 
 }

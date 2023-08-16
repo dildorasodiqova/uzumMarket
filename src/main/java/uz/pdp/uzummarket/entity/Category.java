@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity(name= "category")
-@Builder
+@Builder(setterPrefix = "set")
 public class Category extends BaseEntity{
 
     private String name;
@@ -23,5 +23,5 @@ public class Category extends BaseEntity{
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Category parent;
 
-    private boolean isActive = true;
+    private boolean active = true;
 }
