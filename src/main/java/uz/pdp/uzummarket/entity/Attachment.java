@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "imageDate")
 @Builder
+@Table(name = "image_date")
 public class Attachment extends BaseEntity{
     private String name;
     private String contentType;

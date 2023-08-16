@@ -13,8 +13,10 @@ import java.util.UUID;
 @Setter
 @Entity(name= "category")
 @Builder(setterPrefix = "set")
+@Table(name = "category")
 public class Category extends BaseEntity{
 
+    @Column(unique = true)
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)

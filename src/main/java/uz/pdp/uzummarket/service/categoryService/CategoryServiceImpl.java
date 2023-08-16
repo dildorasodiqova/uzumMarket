@@ -9,6 +9,7 @@ import uz.pdp.uzummarket.Dto.requestSTO.CategoryCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.CategoryResponseDTO;
 import uz.pdp.uzummarket.entity.Attachment;
 import uz.pdp.uzummarket.entity.Category;
+import uz.pdp.uzummarket.exception.DataAlreadyExistsException;
 import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.AttachmentRepository;
 import uz.pdp.uzummarket.repository.CategoryRepository;
@@ -27,10 +28,10 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public CategoryResponseDTO getById(UUID categoryId) {
         Optional<Category> categoryBy = categoryRepository.getCategoryById(categoryId);
-        if (categoryBy == null){
+        if (categoryBy.isEmpty()){
             throw new DataNotFoundException("Category not found");
         }else {
-            CategoryResponseDTO map = modelMapper.map(categoryBy, CategoryResponseDTO.class);
+            CategoryResponseDTO map = modelMapper.map(categoryBy.get(), CategoryResponseDTO.class);
             return map;
         }
     }
@@ -38,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService{
     public List<CategoryResponseDTO> getAll(Long page, Long size){
         Page<Category> all = categoryRepository.findAll(PageRequest.of(page.intValue(), size.intValue()));
         List<CategoryResponseDTO> categoryDTOS = new ArrayList<>();
-        for (Category category : all) {
+        for (Category category : all.getContent()) {
             CategoryResponseDTO map = modelMapper.map(category, CategoryResponseDTO.class);
             categoryDTOS.add(map);
         }
@@ -47,15 +48,19 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public CategoryResponseDTO create(CategoryCreateDTO createDTO) {
+        Optional<Category> byName = categoryRepository.getByName(createDTO.getName());
+        if (byName.isPresent()){
+            throw new DataAlreadyExistsException("Category name already exists");
+        }
         Category parentCategory = null;
         if (createDTO.getParentId() != null) {
-            parentCategory = categoryRepository.findById(createDTO.getParentId()).orElseThrow();
+            parentCategory = categoryRepository.findById(createDTO.getParentId()).orElseThrow(() -> new DataNotFoundException("Category not found"));
         }
 
         Attachment photo = null;
         if (createDTO.getPhotoId() != null) {
             Optional<Attachment> optionalAttachment = attachmentRepository.findById(createDTO.getPhotoId());
-            photo = optionalAttachment.orElseThrow();
+            photo = optionalAttachment.orElseThrow(()->new DataNotFoundException("Photo not found!"));
         }
 
         Category category = Category.builder()
@@ -72,6 +77,11 @@ public class CategoryServiceImpl implements CategoryService{
         response.setPhotoId(photo != null ? photo.getId() : null);
 
         return response;
+    }
+
+    @Override
+    public Category getByIdCategory(UUID categoryId) {
+        return categoryRepository.getCategoryById(categoryId).orElseThrow(()->new DataNotFoundException("Category not found"));
     }
 
 }

@@ -12,10 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name= "basket")
+@Table(name = "basket")
 public class Basket extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Product> products;
+
+    private int count;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product products;
 }

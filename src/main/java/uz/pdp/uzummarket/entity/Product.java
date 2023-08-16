@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity(name= "product")
+@Table(name = "product")
 public class Product extends BaseEntity{
     @Column(unique = true)
     private String name;

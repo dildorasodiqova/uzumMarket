@@ -1,9 +1,6 @@
 package uz.pdp.uzummarket.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity(name= "users")
+@Table(name = "users")
 public class User extends BaseEntity{
     @Column(nullable = false)
     private String firstName;

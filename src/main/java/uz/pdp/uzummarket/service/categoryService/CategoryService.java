@@ -12,5 +12,6 @@ public interface CategoryService {
     List<CategoryResponseDTO> getAll(Long page, Long size);
 
     CategoryResponseDTO create(CategoryCreateDTO createDTO);
+    Category getByIdCategory(UUID categoryId);
 
 }

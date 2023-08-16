@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "feedback")
+@Table(name = "feedback")
 public class Feedback extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Product product;

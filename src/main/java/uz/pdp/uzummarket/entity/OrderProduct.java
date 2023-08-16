@@ -1,9 +1,6 @@
 package uz.pdp.uzummarket.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "order_product")
+@Table(name = "order_product")
 public class OrderProduct extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     private Order order;

@@ -13,5 +13,5 @@ import java.util.UUID;
 public class BasketResponseDTO {
     private UUID id;
     private UUID userId;
-    private List<ProductCreateDTO> products;
+    private ProductResponseDTO product;
 }
