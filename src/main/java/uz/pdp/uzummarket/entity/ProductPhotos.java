@@ -13,6 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity(name = "product_photos")
+@Table(name = "product_photos")
 public class ProductPhotos  extends BaseEntity{
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     private Product product;

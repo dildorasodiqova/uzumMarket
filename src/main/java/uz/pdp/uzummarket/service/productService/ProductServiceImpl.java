@@ -13,6 +13,7 @@ import uz.pdp.uzummarket.Dto.responceDTO.ProductResponseDTO;
 import uz.pdp.uzummarket.entity.Category;
 import uz.pdp.uzummarket.entity.Product;
 import uz.pdp.uzummarket.entity.ProductPhotos;
+import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.AttachmentRepository;
 import uz.pdp.uzummarket.repository.ProductRepository;
 import uz.pdp.uzummarket.service.categoryService.CategoryService;
@@ -67,14 +68,27 @@ public class ProductServiceImpl implements ProductService {
         return modelMapper.map(product,ProductResponseDTO.class);
     }
 
+    @Override
+    public Product findById(UUID productId) {
+       return productRepository.findById(productId).orElseThrow(()->new DataNotFoundException("Product not found!"));
+    }
+
     private ProductResponseDTO createProduct(ProductCreateDTO dto) {
-         Product map = modelMapper.map(dto, Product.class);
-        Product save = productRepository.save(map);
+        Category byId = categoryService.getByIdCategory(dto.getCategoryId());
+         Product product = Product.builder()
+                 .category(byId)
+                 .count(dto.getCount())
+                 .description(dto.getDescription())
+                 .name(dto.getName())
+                 .price(dto.getPrice())
+                 .build();
+        Product save = productRepository.save(product);
 
         List<ProductPhotos> byProductId = productPhotosService.getByProductId(save.getId());
 
         ProductResponseDTO map1 = modelMapper.map(save, ProductResponseDTO.class);
         map1.setId(save.getId());
+        map1.setCategoryId(save.getCategory().getId());
         List<UUID> photosId = new ArrayList<>();
         for (ProductPhotos productPhotos : byProductId) {
             photosId.add(productPhotos.getPhoto().getId());

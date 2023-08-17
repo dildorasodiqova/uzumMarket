@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "order")
+        @Table(name = "orders")
 public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
