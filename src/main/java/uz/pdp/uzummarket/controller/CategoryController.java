@@ -11,6 +11,7 @@ import uz.pdp.uzummarket.Dto.responceDTO.CategoryResponseDTO;
 import uz.pdp.uzummarket.service.categoryService.CategoryService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +26,18 @@ public class CategoryController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody CategoryCreateDTO createDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(createDTO));
+    }
+    @GetMapping("/firstCategory")
+    private ResponseEntity<List<CategoryResponseDTO>> firstCategory(){
+        return ResponseEntity.ok(categoryService.firstCategories());
+    }
+    @GetMapping("getById/{categoryId}")
+    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable UUID categoryId){
+        return ResponseEntity.ok(categoryService.getById(categoryId));
+    }
+    @GetMapping("/subCategories/{categoryId}")
+    public ResponseEntity<List<CategoryResponseDTO>> getSubCategories(@PathVariable UUID categoryId){
+        return ResponseEntity.ok(categoryService.subCategories(categoryId));
     }
 
 }

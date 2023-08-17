@@ -46,8 +46,6 @@ public class BasketServiceImpl implements BasketService {
         productRequestDto.setDescription(product.getDescription());
         list.add(productRequestDto);
 
-
-        BasketResponseDTO basketDTO = new BasketResponseDTO();
         BasketResponseDTO basketResponseDTO = responseDTOParse(byId);
         return basketResponseDTO;
     }
@@ -104,13 +102,13 @@ public class BasketServiceImpl implements BasketService {
         Basket basket;
         if (byUserIdAndProductsId.isPresent()) {
             basket = byUserIdAndProductsId.get();
-            basket.setCount(count);
+            basket.setCount(basket.getCount() + count);
         } else {
             basket = new Basket();
             basket.setCount(count);
             User user = userService.findById(userId);
             basket.setUser(user);
-            Product product = productService.findById(productId);
+            Product product = productService.getById(productId);
             basket.setProducts(product);
         }
         Basket save = basketRepository.save(basket);

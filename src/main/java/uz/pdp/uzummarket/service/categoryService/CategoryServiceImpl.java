@@ -31,11 +31,16 @@ public class CategoryServiceImpl implements CategoryService{
         if (categoryBy.isEmpty()){
             throw new DataNotFoundException("Category not found");
         }else {
-            CategoryResponseDTO map = modelMapper.map(categoryBy.get(), CategoryResponseDTO.class);
-            return map;
+            Category category = categoryBy.get();
+            CategoryResponseDTO responseDTO = new CategoryResponseDTO();
+            responseDTO.setParentId(category.getParent().getId());
+            responseDTO.setActive(category.isActive());
+            responseDTO.setName(category.getName());
+            responseDTO.setPhotoId(category.getPhoto().getId());
+            return responseDTO;
         }
     }
-
+@Override
     public List<CategoryResponseDTO> getAll(Long page, Long size){
         Page<Category> all = categoryRepository.findAll(PageRequest.of(page.intValue(), size.intValue()));
         List<CategoryResponseDTO> categoryDTOS = new ArrayList<>();
@@ -45,6 +50,9 @@ public class CategoryServiceImpl implements CategoryService{
         }
         return  categoryDTOS;
     }
+
+
+
 
     @Override
     public CategoryResponseDTO create(CategoryCreateDTO createDTO) {
@@ -82,6 +90,48 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category getByIdCategory(UUID categoryId) {
         return categoryRepository.getCategoryById(categoryId).orElseThrow(()->new DataNotFoundException("Category not found"));
+    }
+
+    @Override
+    public List<CategoryResponseDTO> firstCategories() {
+        List<Category> categories = categoryRepository.getCategoriesByParent_Id();
+        List<CategoryResponseDTO> list = new ArrayList<>();
+        for (Category category : categories) {
+            if (category.isActive()) {
+                CategoryResponseDTO responseDTO = new CategoryResponseDTO();
+                responseDTO.setActive(category.isActive());
+                responseDTO.setName(category.getName());
+                responseDTO.setId(category.getId());
+                responseDTO.setPhotoId(category.getPhoto().getId());
+                responseDTO.setParentId(null);
+
+            list.add(responseDTO);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<CategoryResponseDTO> subCategories(UUID parentId) {
+        List<Category> categoriesByParentId = categoryRepository.getCategoriesByParent_Id(parentId);
+        List<CategoryResponseDTO> parse = parse(categoriesByParentId);
+        return parse;
+    }
+
+    public List<CategoryResponseDTO> parse(List<Category> category){
+        List<CategoryResponseDTO> list = new ArrayList<>();
+        for (Category category1 : category) {
+            if (category1.isActive()) {
+                CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+                categoryResponseDTO.setPhotoId(category1.getPhoto().getId());
+                categoryResponseDTO.setId(category1.getId());
+                categoryResponseDTO.setName(category1.getName());
+                categoryResponseDTO.setActive(category1.isActive());
+                categoryResponseDTO.setParentId(category1.getParent().getId());
+                list.add(categoryResponseDTO);
+            }
+        }
+        return list;
     }
 
 }

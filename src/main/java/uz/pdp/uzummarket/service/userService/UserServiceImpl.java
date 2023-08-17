@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.pdp.uzummarket.entity.User;
+import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.UserRepository;
 import uz.pdp.uzummarket.Dto.requestSTO.UserCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
@@ -40,6 +41,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findById(UUID userId) {
-        return userRepository.findById(userId).orElse(null);
+        return userRepository.findById(userId).orElseThrow(()->new DataNotFoundException("User Not found!"));
     }
 }

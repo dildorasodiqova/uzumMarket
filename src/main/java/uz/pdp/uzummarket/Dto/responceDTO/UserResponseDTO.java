@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponseDTO {
-    private UUID id;
     private String name;
     private String phoneNumber;
     private UUID userId;
