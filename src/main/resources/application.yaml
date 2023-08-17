@@ -7,12 +7,11 @@
 #spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 #spring.jpa.show-sql=true
 #spring.jpa.properties.hibernate.format_sql=true
-
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/uzumMarket
+    url: jdbc:postgresql://localhost:5432/UzumMarket
     username: postgres
-    password: 2004
+    password: 2006
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -21,7 +20,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         show_sql: true
-    #        format_sql: true
+        format_sql: true
+    open-in-view: false
 springdoc:
   api-docs:
     enabled: true
@@ -33,3 +33,6 @@ springdoc:
     operations-sorter: alpha
     disable-swagger-default-url: true
     doc-expansion: none
+
+server:
+  port: 8081

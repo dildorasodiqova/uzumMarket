@@ -1,11 +1,21 @@
 package uz.pdp.uzummarket.Dto.responceDTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.*;
+import uz.pdp.uzummarket.enums.Gender;
+import uz.pdp.uzummarket.enums.UserRole;
 
+import java.time.LocalDate;
 import java.util.UUID;
+
+import static uz.pdp.uzummarket.enums.UserRole.USER;
 
 @Getter
 @Setter
@@ -13,8 +23,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserResponseDTO {
     private UUID id;
-    private String name;
+    private String firstName;
+
+    private String lastName;
+
     private String phoneNumber;
-    private UUID userId;
+
+    private String email;
+
+    private String password;
+
+    private String gender;
+
+    private String userRole;
+
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern = "MM-dd-yyyy")
+    private LocalDate birthDate;
 
 }

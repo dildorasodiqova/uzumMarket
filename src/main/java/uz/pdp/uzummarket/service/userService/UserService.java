@@ -1,5 +1,6 @@
 package uz.pdp.uzummarket.service.userService;
 
+import uz.pdp.uzummarket.Dto.requestSTO.SignInDTO;
 import uz.pdp.uzummarket.entity.User;
 import uz.pdp.uzummarket.Dto.requestSTO.UserCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
@@ -13,4 +14,6 @@ public interface UserService {
     List<UserResponseDTO> getAll(Long startPage, Long endPage);
 
     User findById(UUID userId);
+
+    UserResponseDTO signIn(SignInDTO dto);
 }
