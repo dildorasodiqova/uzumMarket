@@ -86,6 +86,17 @@ public class BasketServiceImpl implements BasketService {
         dto.setPhotos(uuids);
         return dto;
     }
+    public List<BasketResponseDTO> getUserProduct(UUID userId){
+        List<Basket> basketByUserId = basketRepository.getBasketByUser_Id(userId);
+        List<BasketResponseDTO> list =  new ArrayList<>();
+        for (Basket basket : basketByUserId) {
+            BasketResponseDTO basketResponseDTO = responseDTOParse(basket);
+            list.add(basketResponseDTO);
+        }
+
+        return list;
+
+    }
 
     @Override
     public BasketResponseDTO create(UUID userId, UUID productId, int count) {

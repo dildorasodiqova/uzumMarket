@@ -9,4 +9,5 @@ public interface BasketService {
     BasketResponseDTO getById(UUID basketId);
     List<BasketResponseDTO> getAll(Long page, Long size);
     BasketResponseDTO create(UUID userId, UUID productId, int count);
+    List<BasketResponseDTO> getUserProduct(UUID userId);
 }
