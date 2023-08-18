@@ -16,4 +16,5 @@ public class ProductCreateDTO {
     private Double price;
     private Integer count;
     private UUID categoryId;
+
 }
