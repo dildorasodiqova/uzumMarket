@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponseDTO> search(String word) {
-        List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word);
+        List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word,word);
         return parse(products);
     }
 

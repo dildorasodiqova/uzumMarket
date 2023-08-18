@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     void deleteById(UUID productId);
-    List<Product> searchProductByCategory_NameOrNameContainingIgnoreCase(String word);
+    List<Product> searchProductByCategory_NameOrNameContainingIgnoreCase(String category_name, String name);
 }
