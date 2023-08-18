@@ -36,9 +36,10 @@ public class ProductController {
     @GetMapping("/get-all")
     public ResponseEntity<Page<ProductResponseDTO>> getAll
             (
+                    @RequestParam UUID sellerId,
                     @RequestParam(required = false, defaultValue = "10") int size,
                     @RequestParam(required = false, defaultValue = "0") int page
             ) {
-        return ResponseEntity.ok(productService.getAll(size, page));
+        return ResponseEntity.ok(productService.getAll(sellerId,size, page));
     }
 }

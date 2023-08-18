@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface ProductService {
     ProductResponseDTO save(ProductCreateDTO dto);
 
-    Page<ProductResponseDTO> getAll(int size, int page);
+    Page<ProductResponseDTO> getAll(UUID sellerId,int size, int page);
 
     ProductResponseDTO update(UUID productId, ProductCreateDTO dto);
     Product findById(UUID productId);

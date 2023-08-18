@@ -11,6 +11,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor@NoArgsConstructor
 public class ProductCreateDTO {
+    private UUID sellerId;
     private String name;
     private String description;
     private Double price;

@@ -39,8 +39,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponseDTO > getAll(int size, int page) {
-        Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
+    public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
+        Page<Product> all = productRepository.findProductsBySellerId(sellerId,PageRequest.of(page, size));
         List<ProductResponseDTO> responseDtos = new ArrayList<>();
         for (Product product : all.getContent()) {
             ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
