@@ -14,6 +14,10 @@ import java.util.List;
 @Entity(name= "product")
 @Table(name = "product")
 public class Product extends BaseEntity{
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    private User user;
+
     @Column(unique = true)
     private String name;
     private String description;
@@ -23,6 +27,7 @@ public class Product extends BaseEntity{
 
     @Column(nullable = false)
     private Integer count;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Category category;
 }

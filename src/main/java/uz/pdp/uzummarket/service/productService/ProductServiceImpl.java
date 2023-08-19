@@ -43,13 +43,14 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Page<ProductResponseDTO> getAll(int size, int page) {
+    public Page<ProductResponseDTO> getAll( UUID sellerId ,int size, int page) {
         if (size <= 0 && page <= 0) {
-            List<Product> all = productRepository.findAll();
-            List<ProductResponseDTO> parse = parse(all);
-            return new PageImpl<>(parse);
+            Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
+            return parse(all.getContent());
         }
         Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
+//    public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
+//        Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
         List<ProductResponseDTO> responseDtos = new ArrayList<>();
         for (Product product : all.getContent()) {
             ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
@@ -68,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDTO> search(String word) {
+    public Page<ProductResponseDTO> search(String word) {
         List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word, word);
         return parse(products);
     }
@@ -124,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
         return "Successfully";
     }
 @Transactional
-    private ProductResponseDTO createProduct(ProductCreateDTO dto) {
+    public ProductResponseDTO createProduct(ProductCreateDTO dto) {
         Category byId = categoryService.getByIdCategory(dto.getCategoryId());
         Product product = Product.builder()
                 .category(byId)
@@ -157,7 +158,7 @@ public class ProductServiceImpl implements ProductService {
         return productResponseDTO;
     }
 
-    public List<ProductResponseDTO> parse(List<Product> product) {
+    public Page<ProductResponseDTO> parse(List<Product> product) {
         ProductResponseDTO responseDto = new ProductResponseDTO();
         List<ProductResponseDTO> list = new ArrayList<>();
         for (Product product1 : product) {
@@ -173,7 +174,7 @@ public class ProductServiceImpl implements ProductService {
             responseDto.setCategoryId(product1.getCategory().getId());
             list.add(responseDto);
         }
-        return list;
+        return new  PageImpl<>(list);
     }
 
 

@@ -9,6 +9,7 @@ import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
 import uz.pdp.uzummarket.service.userService.UserService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -29,6 +30,11 @@ public class UserController {
     @PostMapping("/sign-in")
     public ResponseEntity<UserResponseDTO> signIn(@RequestBody SignInDTO dto) {
         return ResponseEntity.ok(userService.signIn(dto));
+    }
+
+    @PostMapping("/get-by-id")
+    public ResponseEntity<UserResponseDTO> getById(@RequestBody UUID userId){
+        return ResponseEntity.ok(userService.getById(userId));
     }
 
 }

@@ -11,8 +11,9 @@ import java.util.UUID;
 public interface ProductService {
     ProductResponseDTO save(ProductCreateDTO dto);
 
-    Page<ProductResponseDTO> getAll(int size, int page);
-    List<ProductResponseDTO> search(String word);
+    Page<ProductResponseDTO> getAll(UUID sellerId,int size, int page);
+
+    Page<ProductResponseDTO> search(String word);
 
     ProductResponseDTO update(UUID productId, ProductCreateDTO dto);
     ProductResponseDTO findById(UUID productId);
