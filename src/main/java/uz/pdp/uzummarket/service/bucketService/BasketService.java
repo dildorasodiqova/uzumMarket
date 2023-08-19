@@ -8,6 +8,6 @@ import java.util.UUID;
 public interface BasketService {
     BasketResponseDTO getById(UUID basketId);
     List<BasketResponseDTO> getAll(Long page, Long size);
-    void   create(UUID userId, UUID productId, int count);
+    BasketResponseDTO  create(UUID userId, UUID productId, int count);
     BasketResponseDTO getUserProduct(UUID userId);
 }

@@ -9,6 +9,7 @@ import uz.pdp.uzummarket.Dto.requestSTO.SignInDTO;
 import uz.pdp.uzummarket.entity.User;
 import uz.pdp.uzummarket.enums.Gender;
 import uz.pdp.uzummarket.enums.UserRole;
+import uz.pdp.uzummarket.exception.DataAlreadyExistsException;
 import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.UserRepository;
 import uz.pdp.uzummarket.Dto.requestSTO.UserCreateDTO;
@@ -16,6 +17,7 @@ import uz.pdp.uzummarket.Dto.responceDTO.UserResponseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,9 +28,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponseDTO create(UserCreateDTO userCreateDTO) {
         User user = createUser(userCreateDTO);
-//        User map = modelMapper.map(userCreateDTO, User.class);
-        User save = userRepository.save(user);
-        return   modelMapper.map(save, UserResponseDTO.class);
+        Optional<User> byId = userRepository.findById(user.getId());
+        if (byId.isPresent()){
+            throw new DataAlreadyExistsException("User already exists");
+        }else {
+            User save = userRepository.save(user);
+            UserResponseDTO parse = parse(save);
+            return parse;
+        }
+
     }
 
     private User createUser(UserCreateDTO userCreateDTO) {
@@ -65,10 +73,10 @@ public class UserServiceImpl implements UserService{
     public UserResponseDTO signIn(SignInDTO dto) {
       User user =  userRepository.getUserByEmailAndPasswordAndFirstName(dto.getEmail(), dto.getPassword(), dto.getName())
               .orElseThrow(()-> new DataNotFoundException("User not found"));
-        return createUserResponseDTO(user);
+        return parse(user);
     }
 
-    private UserResponseDTO createUserResponseDTO(User user) {
+    private UserResponseDTO parse(User user) {
         return new UserResponseDTO(
                 user.getId(),
                 user.getFirstName(),
