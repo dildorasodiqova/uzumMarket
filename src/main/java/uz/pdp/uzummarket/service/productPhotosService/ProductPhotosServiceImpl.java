@@ -15,4 +15,5 @@ public class ProductPhotosServiceImpl implements ProductPhotosService{
     public List<ProductPhotos> getByProductId(UUID productId) {
         return productPhotosRepository.getByProduct_Id(productId);
     }
+
 }

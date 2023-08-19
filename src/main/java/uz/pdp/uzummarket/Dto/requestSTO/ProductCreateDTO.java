@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,4 +17,5 @@ public class ProductCreateDTO {
     private Double price;
     private Integer count;
     private UUID categoryId;
+    private List<UUID> photos;
 }

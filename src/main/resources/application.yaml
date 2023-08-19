@@ -9,9 +9,9 @@
 #spring.jpa.properties.hibernate.format_sql=true
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/UzumMarket
+    url: jdbc:postgresql://localhost:5432/uzumMarket
     username: postgres
-    password: 2006
+    password: 2004
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
