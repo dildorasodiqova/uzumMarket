@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.uzummarket.Dto.requestSTO.CategoryCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.CategoryResponseDTO;
 import uz.pdp.uzummarket.entity.Attachment;
@@ -53,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService{
 
 
 
-
+@Transactional
     @Override
     public CategoryResponseDTO create(CategoryCreateDTO createDTO) {
         Optional<Category> byName = categoryRepository.getByName(createDTO.getName());
@@ -70,14 +71,12 @@ public class CategoryServiceImpl implements CategoryService{
             Optional<Attachment> optionalAttachment = attachmentRepository.findById(createDTO.getPhotoId());
             photo = optionalAttachment.orElseThrow(()->new DataNotFoundException("Photo not found!"));
         }
-
         Category category = Category.builder()
                 .setName(createDTO.getName())
                 .setActive(createDTO.isActive())
                 .setParent(parentCategory)
                 .setPhoto(photo)
                 .build();
-
         categoryRepository.save(category);
 
         CategoryResponseDTO response = modelMapper.map(category, CategoryResponseDTO.class);

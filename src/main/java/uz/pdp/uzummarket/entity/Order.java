@@ -21,8 +21,6 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private double price;
 
-
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts;
 

@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface BasketRepository extends JpaRepository<Basket, UUID> {
     Basket getById(UUID basketId);
-    Optional<Basket> findByUser_idAndProducts_id(UUID user_id, UUID products_id);
-    List<Basket> getBasketByUser_Id(UUID userId);
+    Optional<Basket> findBasketByUserId(UUID userId);
+    Basket getBasketByUser_Id(UUID userId);
 }
