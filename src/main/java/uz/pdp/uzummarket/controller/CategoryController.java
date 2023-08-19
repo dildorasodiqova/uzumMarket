@@ -3,6 +3,8 @@ package uz.pdp.uzummarket.controller;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +37,9 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDTO> getById(@PathVariable UUID categoryId){
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
-    @GetMapping("/subCategories/{categoryId}")
-    public ResponseEntity<List<CategoryResponseDTO>> getSubCategories(@PathVariable UUID categoryId){
-        return ResponseEntity.ok(categoryService.subCategories(categoryId));
+    @PostMapping("/subCategories/{categoryId}")
+    public ResponseEntity<Page<CategoryResponseDTO>> getSubCategories(@PathVariable UUID categoryId){
+        return ResponseEntity.ok(new PageImpl<>(categoryService.subCategories(categoryId)));
     }
 
 }

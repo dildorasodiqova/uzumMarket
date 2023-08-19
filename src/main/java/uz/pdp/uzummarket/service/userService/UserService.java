@@ -16,4 +16,6 @@ public interface UserService {
     User findById(UUID userId);
 
     UserResponseDTO signIn(SignInDTO dto);
+
+    UserResponseDTO getById(UUID userId);
 }

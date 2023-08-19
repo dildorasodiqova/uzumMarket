@@ -76,6 +76,13 @@ public class UserServiceImpl implements UserService{
         return parse(user);
     }
 
+
+    @Override
+    public UserResponseDTO getById(UUID userId) {
+        User user = findById(userId);
+        return parse(user);
+    }
+
     private UserResponseDTO parse(User user) {
         return new UserResponseDTO(
                 user.getId(),

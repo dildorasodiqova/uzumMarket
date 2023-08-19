@@ -1,4 +1,4 @@
-package uz.pdp.uzummarket;
+package uz.pdp.uzummarket.Dto.errorDto;
 
 import org.springframework.http.HttpStatus;
 
