@@ -68,6 +68,12 @@ public class UserServiceImpl implements UserService{
         return createUserResponseDTO(user);
     }
 
+    @Override
+    public UserResponseDTO getById(UUID userId) {
+        User user = findById(userId);
+        return createUserResponseDTO(user);
+    }
+
     private UserResponseDTO createUserResponseDTO(User user) {
         return new UserResponseDTO(
                 user.getId(),

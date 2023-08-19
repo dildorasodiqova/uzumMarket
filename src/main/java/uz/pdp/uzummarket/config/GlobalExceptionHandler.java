@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import uz.pdp.uzummarket.ErrorDto;
+import uz.pdp.uzummarket.Dto.errorDto.ErrorDto;
 import uz.pdp.uzummarket.exception.DataAlreadyExistsException;
 import uz.pdp.uzummarket.exception.DataNotFoundException;
 

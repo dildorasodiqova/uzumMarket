@@ -13,7 +13,7 @@ public interface ProductService {
 
     Page<ProductResponseDTO> getAll(UUID sellerId,int size, int page);
 
-    List<ProductResponseDTO> search(String word);
+    Page<ProductResponseDTO> search(String word);
 
     ProductResponseDTO update(UUID productId, ProductCreateDTO dto);
     ProductResponseDTO findById(UUID productId);
