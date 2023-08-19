@@ -14,4 +14,7 @@ public interface CategoryService {
     CategoryResponseDTO create(CategoryCreateDTO createDTO);
     Category getByIdCategory(UUID categoryId);
 
+    List<CategoryResponseDTO> firstCategories();
+    List<CategoryResponseDTO> subCategories(UUID parentId);
+
 }

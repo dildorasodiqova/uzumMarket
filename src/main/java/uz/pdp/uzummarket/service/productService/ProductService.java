@@ -5,6 +5,7 @@ import uz.pdp.uzummarket.Dto.requestSTO.ProductCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.ProductResponseDTO;
 import uz.pdp.uzummarket.entity.Product;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
@@ -12,6 +13,10 @@ public interface ProductService {
 
     Page<ProductResponseDTO> getAll(UUID sellerId,int size, int page);
 
+    List<ProductResponseDTO> search(String word);
+
     ProductResponseDTO update(UUID productId, ProductCreateDTO dto);
-    Product findById(UUID productId);
+    ProductResponseDTO findById(UUID productId);
+    Product getById(UUID productId);
+    String delete(UUID productId);
 }
