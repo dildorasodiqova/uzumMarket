@@ -24,12 +24,12 @@ public class AttachmentServiceImpl implements AttachmentService {
                 .size(file.getSize())
                 .bytes(file.getBytes()).build());
 
-        return BaseResponse.<UUID>builder()
-                .code(200)
-                .success(true)
-                .message("success")
-                .data(attachment.getId())
-                .build();
+//        return BaseResponse.<UUID>builder()
+//                .code(200)
+//                .success(true)
+//                .message("success")
+//                .data(attachment.getId())
+//                .build();
 
     }
 
