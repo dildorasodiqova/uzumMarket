@@ -3,12 +3,11 @@ package uz.pdp.uzummarket.service.attachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.entity.Attachment;
 import uz.pdp.uzummarket.repository.AttachmentRepository;
-import uz.pdp.uzummarket.util.ImageUtils;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,14 +17,19 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentRepository attachmentRepository;
 
     @Override
-    public UUID uploadImage(MultipartFile file) throws IOException {
+    public BaseResponse<UUID> uploadImage(MultipartFile file) throws IOException {
         Attachment attachment = attachmentRepository.save(Attachment.builder()
                 .name(file.getOriginalFilename())
                 .contentType(file.getContentType())
                 .size(file.getSize())
                 .bytes(file.getBytes()).build());
 
-        return attachment.getId();
+        return BaseResponse.<UUID>builder()
+                .code(200)
+                .success(true)
+                .message("success")
+                .data(attachment.getId())
+                .build();
 
     }
 

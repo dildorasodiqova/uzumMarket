@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.uzummarket.Dto.requestSTO.CategoryCreateDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.Dto.responceDTO.CategoryResponseDTO;
 import uz.pdp.uzummarket.entity.Attachment;
 import uz.pdp.uzummarket.entity.Category;
@@ -27,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService{
     private final ModelMapper modelMapper;
     private final AttachmentRepository attachmentRepository;
     @Override
-    public CategoryResponseDTO getById(UUID categoryId) {
+    public BaseResponse<CategoryResponseDTO> getById(UUID categoryId) {
         Optional<Category> categoryBy = categoryRepository.getCategoryById(categoryId);
         if (categoryBy.isEmpty()){
             throw new DataNotFoundException("Category not found");
@@ -38,25 +39,35 @@ public class CategoryServiceImpl implements CategoryService{
             responseDTO.setActive(category.isActive());
             responseDTO.setName(category.getName());
             responseDTO.setPhotoId(category.getPhoto().getId());
-            return responseDTO;
+            return BaseResponse.<CategoryResponseDTO>builder()
+                    .data(responseDTO)
+                    .success(true)
+                    .message("success")
+                    .code(200)
+                    .build();
         }
     }
 @Override
-    public List<CategoryResponseDTO> getAll(Long page, Long size){
+    public BaseResponse<List<CategoryResponseDTO>> getAll(Long page, Long size){
         Page<Category> all = categoryRepository.findAll(PageRequest.of(page.intValue(), size.intValue()));
         List<CategoryResponseDTO> categoryDTOS = new ArrayList<>();
         for (Category category : all.getContent()) {
             CategoryResponseDTO map = modelMapper.map(category, CategoryResponseDTO.class);
             categoryDTOS.add(map);
         }
-        return  categoryDTOS;
+        return BaseResponse.<List<CategoryResponseDTO>>builder()
+                .success(true)
+                .message("success")
+                .data(categoryDTOS)
+                .code(200)
+                .build();
     }
 
 
 
-@Transactional
+   @Transactional
     @Override
-    public CategoryResponseDTO create(CategoryCreateDTO createDTO) {
+    public BaseResponse<CategoryResponseDTO> create(CategoryCreateDTO createDTO) {
         Optional<Category> byName = categoryRepository.getByName(createDTO.getName());
         if (byName.isPresent()){
             throw new DataAlreadyExistsException("Category name already exists");
@@ -83,16 +94,25 @@ public class CategoryServiceImpl implements CategoryService{
         response.setParentId(parentCategory != null ? parentCategory.getId() : null);
         response.setPhotoId(photo != null ? photo.getId() : null);
 
-        return response;
+        return BaseResponse.<CategoryResponseDTO>builder()
+                .data(response)
+                .message("success")
+                .code(200)
+                .success(true)
+                .build();
     }
 
     @Override
-    public Category getByIdCategory(UUID categoryId) {
-        return categoryRepository.getCategoryById(categoryId).orElseThrow(()->new DataNotFoundException("Category not found"));
+    public BaseResponse<Category> getByIdCategory(UUID categoryId) {
+        return BaseResponse.<Category>builder()
+                .success(true)
+                .data(categoryRepository.getCategoryById(categoryId).orElseThrow(()->new DataNotFoundException("Category not found")))
+                .code(200)
+                .build();
     }
 
     @Override
-    public List<CategoryResponseDTO> firstCategories() {
+    public BaseResponse<List<CategoryResponseDTO>> firstCategories() {
         List<Category> categories = categoryRepository.getCategoriesByParent_Id();
         List<CategoryResponseDTO> list = new ArrayList<>();
         for (Category category : categories) {
@@ -107,14 +127,23 @@ public class CategoryServiceImpl implements CategoryService{
             list.add(responseDTO);
             }
         }
-        return list;
+        return BaseResponse.<List<CategoryResponseDTO>>builder()
+                .message("success")
+                .success(true)
+                .code(200)
+                .data(list).build();
     }
 
     @Override
-    public List<CategoryResponseDTO> subCategories(UUID parentId) {
+    public BaseResponse<List<CategoryResponseDTO>> subCategories(UUID parentId) {
         List<Category> categoriesByParentId = categoryRepository.getCategoriesByParent_Id(parentId);
         List<CategoryResponseDTO> parse = parse(categoriesByParentId);
-        return parse;
+        return BaseResponse.<List<CategoryResponseDTO>>builder()
+                .message("success")
+                .data(parse)
+                .success(true)
+                .code(200)
+                .build();
     }
 
     public List<CategoryResponseDTO> parse(List<Category> category){

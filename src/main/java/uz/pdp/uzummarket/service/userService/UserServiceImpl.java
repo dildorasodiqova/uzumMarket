@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.pdp.uzummarket.Dto.requestSTO.SignInDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.entity.User;
 import uz.pdp.uzummarket.enums.Gender;
 import uz.pdp.uzummarket.enums.UserRole;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService{
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     @Override
-    public UserResponseDTO create(UserCreateDTO userCreateDTO) {
+    public BaseResponse<UserResponseDTO> create(UserCreateDTO userCreateDTO) {
         User user = createUser(userCreateDTO);
         Optional<User> byId = userRepository.findById(user.getId());
         if (byId.isPresent()){
@@ -34,7 +35,12 @@ public class UserServiceImpl implements UserService{
         }else {
             User save = userRepository.save(user);
             UserResponseDTO parse = parse(save);
-            return parse;
+            return BaseResponse.<UserResponseDTO>builder()
+                    .code(200)
+                    .data(parse)
+                    .message("success")
+                    .success(true)
+                    .build();
         }
 
     }
@@ -53,7 +59,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserResponseDTO> getAll(Long page, Long size) {
+    public BaseResponse<List<UserResponseDTO>> getAll(Long page, Long size) {
           PageRequest pageRequest = PageRequest.of(page.intValue(), size.intValue());
         Page<User> all = userRepository.findAll(pageRequest);
         List<UserResponseDTO> list = new ArrayList<>();
@@ -61,26 +67,46 @@ public class UserServiceImpl implements UserService{
             UserResponseDTO map = modelMapper.map(user, UserResponseDTO.class);
             list.add(map);
         }
-        return list;
+        return BaseResponse.<List<UserResponseDTO>>builder()
+                .data(list)
+                .code(200)
+                .success(true)
+                .message("success")
+                .build();
     }
 
     @Override
-    public User findById(UUID userId) {
-        return userRepository.findById(userId).orElse(null);
+    public BaseResponse<User> findById(UUID userId) {
+        return BaseResponse.<User>builder()
+                .success(true)
+                .code(200)
+                .data(userRepository.findById(userId).orElseThrow (() -> new DataNotFoundException("user not found")))
+                .message("success")
+                .build();
     }
 
     @Override
-    public UserResponseDTO signIn(SignInDTO dto) {
+    public BaseResponse<UserResponseDTO> signIn(SignInDTO dto) {
       User user =  userRepository.getUserByEmailAndPasswordAndFirstName(dto.getEmail(), dto.getPassword(), dto.getName())
               .orElseThrow(()-> new DataNotFoundException("User not found"));
-        return parse(user);
+        return BaseResponse.<UserResponseDTO>builder()
+                .data(parse(user))
+                .message("success")
+                .code(200)
+                .success(true)
+                .build();
     }
 
 
     @Override
-    public UserResponseDTO getById(UUID userId) {
-        User user = findById(userId);
-        return parse(user);
+    public BaseResponse<UserResponseDTO> getById(UUID userId) {
+        BaseResponse<User> user = findById(userId);
+        return BaseResponse.<UserResponseDTO>builder()
+                .data(parse(user.getData()))
+                .code(200)
+                .message("success")
+                .success(true)
+                .build();
     }
 
     private UserResponseDTO parse(User user) {

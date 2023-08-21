@@ -1,14 +1,9 @@
 package uz.pdp.uzummarket.controller;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.uzummarket.Dto.requestSTO.CategoryCreateDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.Dto.responceDTO.CategoryResponseDTO;
 import uz.pdp.uzummarket.service.categoryService.CategoryService;
 
@@ -22,24 +17,24 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<CategoryResponseDTO>> getAll(@RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "10") Long size){
+    public ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> getAll(@RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "10") Long size){
          return ResponseEntity.ok(categoryService.getAll(page,size));
     }
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CategoryCreateDTO createDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(createDTO));
+    public ResponseEntity<BaseResponse<CategoryResponseDTO>> create(@RequestBody CategoryCreateDTO createDTO) {
+        return ResponseEntity.ok(categoryService.create(createDTO));
     }
-    @GetMapping("/firstCategory")
-    private ResponseEntity<List<CategoryResponseDTO>> firstCategory(){
+    @GetMapping("/first")
+    private ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> firstCategory(){
         return ResponseEntity.ok(categoryService.firstCategories());
     }
     @GetMapping("getById/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable UUID categoryId){
+    public ResponseEntity<BaseResponse<CategoryResponseDTO>> getById(@PathVariable UUID categoryId){
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
     @PostMapping("/subCategories/{categoryId}")
-    public ResponseEntity<Page<CategoryResponseDTO>> getSubCategories(@PathVariable UUID categoryId){
-        return ResponseEntity.ok(new PageImpl<>(categoryService.subCategories(categoryId)));
+    public ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> getSubCategories(@PathVariable UUID categoryId){
+        return ResponseEntity.ok(categoryService.subCategories(categoryId));
     }
 
 }

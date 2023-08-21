@@ -1,11 +1,10 @@
 package uz.pdp.uzummarket.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.entity.Attachment;
 import uz.pdp.uzummarket.service.attachmentService.AttachmentService;
 
@@ -21,28 +20,35 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     @PostMapping("/multiple-upload")
-    public ResponseEntity<List<UUID>> multipleUpload(@RequestParam("files") MultipartFile[] files) throws IOException {
+    public ResponseEntity<BaseResponse<List<UUID>>> multipleUpload(@RequestParam("files") MultipartFile[] files) throws IOException {
         List<UUID> fileIdList = new ArrayList<>(files.length);
         for (MultipartFile file : files) {
-            UUID uuid = attachmentService.uploadImage(file);
-            fileIdList.add(uuid);
+            BaseResponse<UUID> uuid = attachmentService.uploadImage(file);
+            fileIdList.add(uuid.getData());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(fileIdList);
+        return ResponseEntity.ok(BaseResponse.<List<UUID>>builder()
+                .data(fileIdList)
+                .message("success")
+                .code(200)
+                .success(true)
+                .build());
     }
 
     @PostMapping("/single-upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        UUID uploadImage = attachmentService.uploadImage(file);
-        return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+    public ResponseEntity<BaseResponse<UUID>> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(attachmentService.uploadImage(file));
     }
 
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<?> downloadImage(@PathVariable UUID fileId) {
+    public ResponseEntity<BaseResponse<byte[]>> downloadImage(@PathVariable UUID fileId) {
         Attachment attachment = attachmentService.downloadImage(fileId);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.valueOf(attachment.getContentType()))
-                .body(attachment.getBytes());
+        return ResponseEntity.ok(
+                BaseResponse.<byte[]>builder()
+                        .data(attachment.getBytes())
+                        .success(true)
+                        .message("success")
+                        .code(200)
+                        .build());
     }
 }
