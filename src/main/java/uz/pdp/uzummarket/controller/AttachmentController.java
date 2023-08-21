@@ -23,15 +23,15 @@ public class AttachmentController {
     public ResponseEntity<BaseResponse<List<UUID>>> multipleUpload(@RequestParam("files") MultipartFile[] files) throws IOException {
         List<UUID> fileIdList = new ArrayList<>(files.length);
         for (MultipartFile file : files) {
-            BaseResponse<UUID> uuid = attachmentService.uploadImage(file);
-            fileIdList.add(uuid.getData());
+//            BaseResponse<UUID> uuid = attachmentService.uploadImage(file);
+//            fileIdList.add(uuid.getData());
         }
-        return ResponseEntity.ok(BaseResponse.<List<UUID>>builder()
-                .data(fileIdList)
-                .message("success")
-                .code(200)
-                .success(true)
-                .build());
+//        return ResponseEntity.ok(BaseResponse.<List<UUID>>builder()
+//                .data(fileIdList)
+//                .message("success")
+//                .code(200)
+//                .success(true)
+//                .build());
     }
 
     @PostMapping("/single-upload")
@@ -43,12 +43,12 @@ public class AttachmentController {
     public ResponseEntity<BaseResponse<byte[]>> downloadImage(@PathVariable UUID fileId) {
         Attachment attachment = attachmentService.downloadImage(fileId);
 
-        return ResponseEntity.ok(
-                BaseResponse.<byte[]>builder()
-                        .data(attachment.getBytes())
-                        .success(true)
-                        .message("success")
-                        .code(200)
-                        .build());
+//        return ResponseEntity.ok(
+//                BaseResponse.<byte[]>builder()
+//                        .data(attachment.getBytes())
+//                        .success(true)
+//                        .message("success")
+//                        .code(200)
+//                        .build());
     }
 }
