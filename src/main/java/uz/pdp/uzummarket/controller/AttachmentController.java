@@ -35,8 +35,8 @@ public class AttachmentController {
     }
 
     @PostMapping("/single-upload")
-    public ResponseEntity<UUID> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-//        return ResponseEntity.ok(attachmentService.uploadImage(file));
+    public ResponseEntity<BaseResponse<UUID>> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(attachmentService.uploadImage(file));
     }
 
     @GetMapping("/download/{fileId}")
