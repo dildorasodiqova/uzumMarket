@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class OrderCreateDTO {
     private UUID userId;
-    private boolean delivery;
+    private List<OrderProductCreateDTO> products;
 }

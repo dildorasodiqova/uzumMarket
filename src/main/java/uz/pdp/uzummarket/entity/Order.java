@@ -14,12 +14,12 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "order")
-        @Table(name = "orders")
+@Table(name = "orders")
 public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
     @Column(nullable = false)
-    private double price;
+    private double price; ///total price
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts;
@@ -28,4 +28,11 @@ public class Order extends BaseEntity {
     private OrderStatus status = OrderStatus.NEW;
 
     private boolean delivery; /// true bo'lsa uyiga yetkazgan bo'ladi, false bo'lsa punkitga
+
+    public Order(User user, double price, OrderStatus status, boolean b) {
+        this.user = user;
+        this.price = price;
+        this.status = status;
+        this.delivery = b;
+    }
 }
