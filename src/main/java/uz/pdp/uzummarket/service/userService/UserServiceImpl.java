@@ -35,12 +35,12 @@ public class UserServiceImpl implements UserService{
         }else {
             User save = userRepository.save(user);
             UserResponseDTO parse = parse(save);
-            return BaseResponse.<UserResponseDTO>builder()
-                    .code(200)
-                    .data(parse)
-                    .message("success")
-                    .success(true)
-                    .build();
+//            return BaseResponse.<UserResponseDTO>builder()
+//                    .code(200)
+//                    .data(parse)
+//                    .message("success")
+//                    .success(true)
+//                    .build();
         }
 
     }
@@ -67,22 +67,22 @@ public class UserServiceImpl implements UserService{
             UserResponseDTO map = modelMapper.map(user, UserResponseDTO.class);
             list.add(map);
         }
-        return BaseResponse.<List<UserResponseDTO>>builder()
-                .data(list)
-                .code(200)
-                .success(true)
-                .message("success")
-                .build();
+//        return BaseResponse.<List<UserResponseDTO>>builder()
+//                .data(list)
+//                .code(200)
+//                .success(true)
+//                .message("success")
+//                .build();
     }
 
     @Override
-    public BaseResponse<User> findById(UUID userId) {
-        return BaseResponse.<User>builder()
-                .success(true)
-                .code(200)
-                .data(userRepository.findById(userId).orElseThrow (() -> new DataNotFoundException("user not found")))
-                .message("success")
-                .build();
+    public User findById(UUID userId) {
+//        return BaseResponse.<User>builder()
+//                .success(true)
+//                .code(200)
+//                .data(userRepository.findById(userId).orElseThrow (() -> new DataNotFoundException("user not found")))
+//                .message("success")
+//                .build();
     }
 
     @Override
