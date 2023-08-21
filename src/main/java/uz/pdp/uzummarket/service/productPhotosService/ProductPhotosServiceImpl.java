@@ -14,12 +14,12 @@ public class ProductPhotosServiceImpl implements ProductPhotosService{
     private final ProductPhotosRepository productPhotosRepository;
     @Override
     public BaseResponse<List<ProductPhotos>> getByProductId(UUID productId) {
-        return BaseResponse.<List<ProductPhotos>>builder()
-                .code(200)
-                .message("success")
-                .data(productPhotosRepository.getByProduct_Id(productId))
-                .success(true)
-                .build();
+//        return BaseResponse.<List<ProductPhotos>>builder()
+//                .code(200)
+//                .message("success")
+//                .data(productPhotosRepository.getByProduct_Id(productId))
+//                .success(true)
+//                .build();
     }
 
 }
