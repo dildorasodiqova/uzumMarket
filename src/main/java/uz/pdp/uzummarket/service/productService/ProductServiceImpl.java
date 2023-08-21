@@ -67,9 +67,9 @@ public class ProductServiceImpl implements ProductService {
             ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
             map.setId(product.getId());
 
-            List<ProductPhotos> byProductId = productPhotosService.getByProductId(product.getId());
+            BaseResponse<List<ProductPhotos>> photos = productPhotosService.getByProductId(product.getId());
             List<UUID> uuids = new ArrayList<>();
-            for (ProductPhotos productPhotos : byProductId) {
+            for (ProductPhotos productPhotos : photos.getData()) {
                 uuids.add(productPhotos.getId());
             }
             map.setPhotos(uuids);
@@ -116,8 +116,8 @@ public class ProductServiceImpl implements ProductService {
     public BaseResponse<ProductResponseDTO> findById(UUID productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Product not found!"));
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-        List<ProductPhotos> byProductId = productPhotosService.getByProductId(product.getId());
-        List<UUID> photosId = getPhotosId(byProductId);
+        BaseResponse<List<ProductPhotos>> photos = productPhotosService.getByProductId(product.getId());
+        List<UUID> photosId = getPhotosId(photos.getData());
 
         productResponseDTO.setPhotos(photosId);
         productResponseDTO.setPrice(product.getPrice());
@@ -209,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
             responseDto.setCount(product1.getCount());
             responseDto.setId(product1.getId());
 
-            List<UUID> photosId = getPhotosId(productPhotosService.getByProductId(product1.getId()));
+            List<UUID> photosId = getPhotosId(productPhotosService.getByProductId(product1.getId()).getData());
 
             responseDto.setPhotos(photosId);
             responseDto.setCategoryId(product1.getCategory().getId());

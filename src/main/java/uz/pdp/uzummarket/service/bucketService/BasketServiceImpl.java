@@ -71,7 +71,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public BaseResponse<BasketResponseDTO> create(UUID userId, UUID productId, int count) {
-        User user = userService.findById(userId);
+        BaseResponse<User> user = userService.findById(userId);
         Optional<Basket> optionalBasket = basketRepository.findBasketByUserId(userId);// shu userni savati bormi yuqmi dedik
         Product product = productRepository.findById(productId).orElseThrow(()->new DataNotFoundException("Product not found"));
         if (optionalBasket.isPresent()){
@@ -93,7 +93,7 @@ public class BasketServiceImpl implements BasketService {
                     .build();
         }else {
             Basket basket = new Basket();
-            basket.setUser(user);
+            basket.setUser(user.getData());
             basket.setCountProduct(count);
             basketRepository.save(basket);
             BasketProduct basketProduct = new BasketProduct(basket,product,count);
