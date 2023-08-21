@@ -16,26 +16,15 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
 
-
-
-    @PutMapping("/update")
-    public ResponseEntity<BaseResponse<ProductResponseDTO>> update
+    @PostMapping("/create")
+    public ResponseEntity<BaseResponse<ProductResponseDTO>> create
             (
-                    @RequestParam UUID productId,
                     @RequestBody ProductCreateDTO dto
             ) {
-        return ResponseEntity.ok(productService.update(productId, dto));
+        return ResponseEntity.ok(productService.save(dto));
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<BaseResponse<Page<ProductResponseDTO>>> getAll
-            (
-                    @RequestParam UUID sellerId,
-                    @RequestParam(required = false, defaultValue = "0") int size,
-                    @RequestParam(required = false, defaultValue = "0") int page
-            ) {
-        return ResponseEntity.ok(productService.getAll(sellerId,size, page));
-    }
+
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<BaseResponse<String>> delete(@PathVariable UUID productId) {
         return ResponseEntity.ok(productService.delete(productId));
