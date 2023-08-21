@@ -20,7 +20,10 @@ public class CategoryController {
     public ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> getAll(@RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "10") Long size){
          return ResponseEntity.ok(categoryService.getAll(page,size));
     }
-
+    @PostMapping("/create")
+    public ResponseEntity<BaseResponse<CategoryResponseDTO>> create(@RequestBody CategoryCreateDTO createDTO) {
+        return ResponseEntity.ok(categoryService.create(createDTO));
+    }
     @GetMapping("/first")
     private ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> firstCategory(){
         return ResponseEntity.ok(categoryService.firstCategories());
