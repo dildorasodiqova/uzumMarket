@@ -48,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService{
         }
     }
 @Override
-    public BaseResponse<List<CategoryResponseDTO>> getAll(Long page, Long size){
+    public BaseResponse<CategoryResponseDTO> getAll(Long page, Long size){
         Page<Category> all = categoryRepository.findAll(PageRequest.of(page.intValue(), size.intValue()));
         List<CategoryResponseDTO> categoryDTOS = new ArrayList<>();
         for (Category category : all.getContent()) {
