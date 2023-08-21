@@ -23,4 +23,19 @@ public class UserController {
     }
 
 
+    @GetMapping("/getAll")
+    public ResponseEntity<BaseResponse<List<UserResponseDTO>>> getAll(@RequestParam(defaultValue = "0") Long page,
+                                                                      @RequestParam(defaultValue = "10") Long size){
+        return ResponseEntity.ok(userService.getAll(page,size));
+    }
+
+    @PostMapping("/sign-in")
+    public ResponseEntity<BaseResponse<UserResponseDTO>> signIn(@RequestBody SignInDTO dto) {
+        return ResponseEntity.ok(userService.signIn(dto));
+    }
+
+    @PostMapping("/get-by-id")
+    public ResponseEntity<BaseResponse<UserResponseDTO>> getById(@RequestBody UUID userId){
+        return ResponseEntity.ok(userService.getById(userId));
+    }
 }
