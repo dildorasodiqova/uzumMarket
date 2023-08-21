@@ -1,7 +1,4 @@
 package uz.pdp.uzummarket.controller;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,8 +35,8 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
     @PostMapping("/subCategories/{categoryId}")
-    public ResponseEntity<Page<CategoryResponseDTO>> getSubCategories(@PathVariable UUID categoryId){
-        return ResponseEntity.ok(new PageImpl<>(categoryService.subCategories(categoryId)));
+    public ResponseEntity<List<CategoryResponseDTO>> getSubCategories(@PathVariable UUID categoryId){
+        return ResponseEntity.ok(categoryService.subCategories(categoryId));
     }
 
 }
