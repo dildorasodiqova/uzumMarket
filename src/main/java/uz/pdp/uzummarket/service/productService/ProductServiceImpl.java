@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.uzummarket.Dto.requestSTO.ProductCreateDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.Dto.responceDTO.ProductResponseDTO;
 import uz.pdp.uzummarket.entity.Attachment;
 import uz.pdp.uzummarket.entity.Category;
@@ -36,17 +37,27 @@ public class ProductServiceImpl implements ProductService {
     private final AttachmentRepository attachmentRepository;
 @Transactional
     @Override
-    public ProductResponseDTO save(ProductCreateDTO dto) {
+    public BaseResponse<ProductResponseDTO> save(ProductCreateDTO dto) {
         ProductResponseDTO product = createProduct(dto);
-        return product;
+        return BaseResponse.<ProductResponseDTO>builder()
+                .code(200)
+                .message("success")
+                .success(true)
+                .data(product)
+                .build();
     }
 
 
     @Override
-    public Page<ProductResponseDTO> getAll( UUID sellerId ,int size, int page) {
+    public BaseResponse<Page<ProductResponseDTO>> getAll(UUID sellerId , int size, int page) {
         if (size <= 0 && page <= 0) {
             Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
-            return parse(all.getContent());
+            return BaseResponse.<Page<ProductResponseDTO>>builder()
+                    .data(parse(all.getContent()))
+                    .message("success")
+                    .code(200)
+                    .success(true)
+                    .build();
         }
         Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
 //    public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
@@ -65,29 +76,44 @@ public class ProductServiceImpl implements ProductService {
             responseDtos.add(map);
 
         }
-        return new PageImpl<>(responseDtos);
+        return BaseResponse.<Page<ProductResponseDTO>>builder()
+                .data(new PageImpl<>(responseDtos))
+                .message("success")
+                .success(true)
+                .code(200)
+                .build();
     }
 
     @Override
-    public Page<ProductResponseDTO> search(String word) {
+    public BaseResponse<Page<ProductResponseDTO>> search(String word) {
         List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word, word);
-        return parse(products);
+        return BaseResponse.<Page<ProductResponseDTO>>builder()
+                .data(parse(products))
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
     }
 
 @Transactional
     @Override
-    public ProductResponseDTO update(UUID productId, ProductCreateDTO dto) {
+    public BaseResponse<ProductResponseDTO> update(UUID productId, ProductCreateDTO dto) {
         Optional<Product> byId = productRepository.findById(productId);
         Product product = byId.get();
         product.setPrice(dto.getPrice());
         product.setCount(dto.getCount());
         product.setDescription(dto.getDescription());
         productRepository.save(product);
-        return modelMapper.map(product, ProductResponseDTO.class);
+        return BaseResponse.<ProductResponseDTO>builder()
+                .data(modelMapper.map(product, ProductResponseDTO.class))
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
     }
 
     @Override
-    public ProductResponseDTO findById(UUID productId) {
+    public BaseResponse<ProductResponseDTO> findById(UUID productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Product not found!"));
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
         List<ProductPhotos> byProductId = productPhotosService.getByProductId(product.getId());
@@ -101,13 +127,23 @@ public class ProductServiceImpl implements ProductService {
         productResponseDTO.setName(product.getName());
         productResponseDTO.setId(product.getId());
 
-        return productResponseDTO;
+        return BaseResponse.<ProductResponseDTO>builder()
+                .data(productResponseDTO)
+                .message("success")
+                .code(200)
+                .success(true)
+                .build();
     }
 @Transactional
     @Override
-    public Product getById(UUID productId) {
+    public BaseResponse<Product> getById(UUID productId) {
         Optional<Product> byId = productRepository.findById(productId);
-        return byId.get();
+        return BaseResponse.<Product>builder()
+                .message("success")
+                .success(true)
+                .code(200)
+                .data(byId.get())
+                .build();
     }
 @Transactional
     public List<UUID> getPhotosId(List<ProductPhotos> productPhotos) {
@@ -119,16 +155,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String delete(UUID productId) {
+    public BaseResponse<String> delete(UUID productId) {
         productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Product not found"));
         productRepository.deleteById(productId);
-        return "Successfully";
+        return BaseResponse.<String>builder()
+                .data("Successfully")
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
     }
 @Transactional
     public ProductResponseDTO createProduct(ProductCreateDTO dto) {
-        Category byId = categoryService.getByIdCategory(dto.getCategoryId());
-        Product product = Product.builder()
-                .category(byId)
+    BaseResponse<Category> id = categoryService.getByIdCategory(dto.getCategoryId());
+    Product product = Product.builder()
+                .category(id.getData())
                 .count(dto.getCount())
                 .description(dto.getDescription())
                 .name(dto.getName())

@@ -1,21 +1,17 @@
 package uz.pdp.uzummarket.service.bucketService;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import uz.pdp.uzummarket.Dto.requestSTO.ProductCreateDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.Dto.responceDTO.BasketProductDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.BasketResponseDTO;
-import uz.pdp.uzummarket.Dto.responceDTO.ProductResponseDTO;
 import uz.pdp.uzummarket.entity.*;
 import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.BasketProductRepository;
 import uz.pdp.uzummarket.repository.BasketRepository;
 import uz.pdp.uzummarket.repository.ProductRepository;
-import uz.pdp.uzummarket.service.productPhotosService.ProductPhotosService;
-import uz.pdp.uzummarket.service.productService.ProductService;
 import uz.pdp.uzummarket.service.userService.UserService;
 
 import java.util.ArrayList;
@@ -74,7 +70,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public BasketResponseDTO create(UUID userId, UUID productId, int count) {
+    public BaseResponse<BasketResponseDTO> create(UUID userId, UUID productId, int count) {
         User user = userService.findById(userId);
         Optional<Basket> optionalBasket = basketRepository.findBasketByUserId(userId);// shu userni savati bormi yuqmi dedik
         Product product = productRepository.findById(productId).orElseThrow(()->new DataNotFoundException("Product not found"));
@@ -89,7 +85,12 @@ public class BasketServiceImpl implements BasketService {
                 basketProduct = new BasketProduct(basket, product, count);
             }
             basketProductRepository.save(basketProduct);
-            return parse(basket,List.of(basketProduct));
+            return BaseResponse.<BasketResponseDTO>builder()
+                    .message("success")
+                    .code(200)
+                    .data(parse(basket,List.of(basketProduct)))
+                    .success(true)
+                    .build();
         }else {
             Basket basket = new Basket();
             basket.setUser(user);
@@ -97,7 +98,12 @@ public class BasketServiceImpl implements BasketService {
             basketRepository.save(basket);
             BasketProduct basketProduct = new BasketProduct(basket,product,count);
             basketProductRepository.save(basketProduct);
-            return parse(basket,List.of(basketProduct));
+            return BaseResponse.<BasketResponseDTO>builder()
+                    .code(200)
+                    .success(true)
+                    .data(parse(basket,List.of(basketProduct)))
+                    .message("success")
+                    .build();
         }
     }
 
