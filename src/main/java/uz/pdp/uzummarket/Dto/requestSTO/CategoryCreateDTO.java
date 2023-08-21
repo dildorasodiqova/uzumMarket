@@ -13,3 +13,4 @@ public class CategoryCreateDTO {
     private UUID parentId;
     private boolean active;
 }
+
