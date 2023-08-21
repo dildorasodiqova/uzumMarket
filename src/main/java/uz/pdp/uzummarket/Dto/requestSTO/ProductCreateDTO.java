@@ -20,3 +20,4 @@ public class ProductCreateDTO {
     private UUID categoryId;
     private List<UUID> photos;
 }
+

@@ -22,6 +22,7 @@ public class UserController {
         return ResponseEntity.ok(userService.create(userCreateDTO));
     }
 
+
     @GetMapping("/getAll")
     public ResponseEntity<BaseResponse<List<UserResponseDTO>>> getAll(@RequestParam(defaultValue = "0") Long page,
                                                                       @RequestParam(defaultValue = "10") Long size){
@@ -37,5 +38,4 @@ public class UserController {
     public ResponseEntity<BaseResponse<UserResponseDTO>> getById(@RequestBody UUID userId){
         return ResponseEntity.ok(userService.getById(userId));
     }
-
 }

@@ -60,8 +60,8 @@ public class ProductServiceImpl implements ProductService {
                     .build();
         }
         Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
-//    public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
-//        Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
+//  1  public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
+//   1     Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
         List<ProductResponseDTO> responseDtos = new ArrayList<>();
         for (Product product : all.getContent()) {
             ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
