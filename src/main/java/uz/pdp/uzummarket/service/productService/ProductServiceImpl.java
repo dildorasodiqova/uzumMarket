@@ -39,12 +39,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseResponse<ProductResponseDTO> save(ProductCreateDTO dto) {
         ProductResponseDTO product = createProduct(dto);
-        return BaseResponse.<ProductResponseDTO>builder()
-                .code(200)
-                .message("success")
-                .success(true)
-                .data(product)
-                .build();
+//        return BaseResponse.<ProductResponseDTO>builder()
+//                .code(200)
+//                .message("success")
+//                .success(true)
+//                .data(product)
+//                .build();
     }
 
 
@@ -52,16 +52,16 @@ public class ProductServiceImpl implements ProductService {
     public BaseResponse<Page<ProductResponseDTO>> getAll(UUID sellerId , int size, int page) {
         if (size <= 0 && page <= 0) {
             Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
-            return BaseResponse.<Page<ProductResponseDTO>>builder()
-                    .data(parse(all.getContent()))
-                    .message("success")
-                    .code(200)
-                    .success(true)
-                    .build();
+//            return BaseResponse.<Page<ProductResponseDTO>>builder()
+//                    .data(parse(all.getContent()))
+//                    .message("success")
+//                    .code(200)
+//                    .success(true)
+//                    .build();
         }
         Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
-//    public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
-//        Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
+//  1  public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
+//   1     Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
         List<ProductResponseDTO> responseDtos = new ArrayList<>();
         for (Product product : all.getContent()) {
             ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
@@ -76,23 +76,23 @@ public class ProductServiceImpl implements ProductService {
             responseDtos.add(map);
 
         }
-        return BaseResponse.<Page<ProductResponseDTO>>builder()
-                .data(new PageImpl<>(responseDtos))
-                .message("success")
-                .success(true)
-                .code(200)
-                .build();
+//        return BaseResponse.<Page<ProductResponseDTO>>builder()
+//                .data(new PageImpl<>(responseDtos))
+//                .message("success")
+//                .success(true)
+//                .code(200)
+//                .build();
     }
 
     @Override
     public BaseResponse<Page<ProductResponseDTO>> search(String word) {
         List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word, word);
-        return BaseResponse.<Page<ProductResponseDTO>>builder()
-                .data(parse(products))
-                .success(true)
-                .message("success")
-                .code(200)
-                .build();
+//        return BaseResponse.<Page<ProductResponseDTO>>builder()
+//                .data(parse(products))
+//                .success(true)
+//                .message("success")
+//                .code(200)
+//                .build();
     }
 
 @Transactional
@@ -104,12 +104,12 @@ public class ProductServiceImpl implements ProductService {
         product.setCount(dto.getCount());
         product.setDescription(dto.getDescription());
         productRepository.save(product);
-        return BaseResponse.<ProductResponseDTO>builder()
-                .data(modelMapper.map(product, ProductResponseDTO.class))
-                .success(true)
-                .message("success")
-                .code(200)
-                .build();
+//        return BaseResponse.<ProductResponseDTO>builder()
+//                .data(modelMapper.map(product, ProductResponseDTO.class))
+//                .success(true)
+//                .message("success")
+//                .code(200)
+//                .build();
     }
 
     @Override
@@ -138,12 +138,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseResponse<Product> getById(UUID productId) {
         Optional<Product> byId = productRepository.findById(productId);
-        return BaseResponse.<Product>builder()
-                .message("success")
-                .success(true)
-                .code(200)
-                .data(byId.get())
-                .build();
+//        return BaseResponse.<Product>builder()
+//                .message("success")
+//                .success(true)
+//                .code(200)
+//                .data(byId.get())
+//                .build();
     }
 @Transactional
     public List<UUID> getPhotosId(List<ProductPhotos> productPhotos) {
@@ -158,12 +158,12 @@ public class ProductServiceImpl implements ProductService {
     public BaseResponse<String> delete(UUID productId) {
         productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Product not found"));
         productRepository.deleteById(productId);
-        return BaseResponse.<String>builder()
-                .data("Successfully")
-                .success(true)
-                .message("success")
-                .code(200)
-                .build();
+//        return BaseResponse.<String>builder()
+//                .data("Successfully")
+//                .success(true)
+//                .message("success")
+//                .code(200)
+//                .build();
     }
 @Transactional
     public ProductResponseDTO createProduct(ProductCreateDTO dto) {
