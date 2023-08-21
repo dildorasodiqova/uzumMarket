@@ -16,13 +16,7 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("/create")
-    public ResponseEntity<BaseResponse<ProductResponseDTO>> create
-            (
-                    @RequestBody ProductCreateDTO dto
-            ) {
-        return ResponseEntity.ok(productService.save(dto));
-    }
+
 
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<ProductResponseDTO>> update
