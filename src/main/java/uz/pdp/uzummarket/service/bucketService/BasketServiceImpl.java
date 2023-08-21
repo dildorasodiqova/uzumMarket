@@ -27,25 +27,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BasketServiceImpl implements BasketService {
     private final BasketRepository basketRepository;
-    private final ModelMapper modelMapper;
     private final UserService userService;
     private final ProductRepository productRepository;
-    private final ProductPhotosService productPhotosService;
     private final BasketProductRepository basketProductRepository;
 
     @Override
     public BasketResponseDTO getById(UUID basketId) {
         Basket basket = basketRepository.getById(basketId);
         List<BasketProduct> allByBasketId = basketProductRepository.findAllByBasketId(basket.getId());
-        List<BasketProductDTO> parse = parse(allByBasketId);
-
-        double price = 0d;
-        for (BasketProductDTO basketProductDTO : parse) {
-            price += basketProductDTO.getPrice();
-        }
-        return new BasketResponseDTO(basket.getUser().getId(), basket.getId(),parse,price);
+        return parse(basket, allByBasketId);
     }
 
+    /**
+     * This method for Admin
+     * @param page
+     * @param size
+     * @return
+     */
     @Override
     public List<BasketResponseDTO> getAll(Long page, Long size) {
         Page<Basket> all = basketRepository.findAll(PageRequest.of(page.intValue(), size.intValue()));
@@ -54,53 +52,18 @@ public class BasketServiceImpl implements BasketService {
         List<BasketResponseDTO> list = new ArrayList<>();
         for (Basket basket : content) {
             List<BasketProduct> allByBasketId = basketProductRepository.findAllByBasketId(basket.getId());
-            List<BasketProductDTO> parse = parse(allByBasketId);
-
-            double price = 0d;
-            for (BasketProductDTO basketProductDTO : parse) {
-                price += basketProductDTO.getPrice();
-            }
-            BasketResponseDTO basketDTO = new BasketResponseDTO(basket.getUser().getId(),basket.getId(),parse,price);
-            list.add(basketDTO);
+            BasketResponseDTO parse = parse(basket, allByBasketId);
+            list.add(parse);
         }
-
         return list;
     }
 
-//    public ProductResponseDTO parse(Product product) {
-//        ProductResponseDTO dto = new ProductResponseDTO();
-//        dto.setId(product.getId());
-//        dto.setDescription(product.getDescription());
-//        dto.setName(product.getName());
-//        dto.setCount(product.getCount());
-//        dto.setPrice(product.getPrice());
-//        dto.setCategoryId(product.getCategory().getId());
-//        List<ProductPhotos> byProductId = productPhotosService.getByProductId(product.getId());
-//        List<UUID> uuids = new ArrayList<>();
-//        for (ProductPhotos productPhotos : byProductId) {
-//            uuids.add(productPhotos.getId());
-//        }
-//        dto.setPhotos(uuids);
-//        return dto;
-//    }
     public BasketResponseDTO getUserProduct(UUID userId){
         Basket basket = basketRepository.getBasketByUser_Id(userId);
-        BasketResponseDTO basketResponseDTO = new BasketResponseDTO();
-
         List<BasketProduct> allByBasketId = basketProductRepository.findAllByBasketId(basket.getId());
-        List<BasketProductDTO> parse = parse(allByBasketId);
-        double price = 0d;
-        for (BasketProductDTO basketProductDTO : parse) {
-            price += basketProductDTO.getPrice();
-        }
-
-        basketResponseDTO.setProducts(parse);
-        basketResponseDTO.setUserId(basket.getUser().getId());
-        basketResponseDTO.setBasketId(basket.getId());
-        basketResponseDTO.setTotalPrice(price);
-
-        return basketResponseDTO;
+        return parse(basket, allByBasketId);
     }
+
     public List<BasketProductDTO> parse(List<BasketProduct> basketProduct) {
         List<BasketProductDTO> list = new ArrayList<>();
         for (BasketProduct product : basketProduct) {
@@ -118,28 +81,32 @@ public class BasketServiceImpl implements BasketService {
         if (optionalBasket.isPresent()){
             Basket basket = optionalBasket.get();
             Optional<BasketProduct> pr = basketProductRepository.findByBasketIdAndProductId(basket.getId(), productId);
+            BasketProduct basketProduct;
             if (pr.isPresent()) {
-                BasketProduct basketProduct = pr.get();
-                basketProduct.setCount(basketProduct.getCount() + count);
-                basketProductRepository.save(basketProduct);
+                basketProduct = pr.get();
+                basketProduct.setCount(count);
             }else {
-                BasketProduct basketProduct = new BasketProduct(basket, product, count);
-                basketProductRepository.save(basketProduct);
+                basketProduct = new BasketProduct(basket, product, count);
             }
-
+            basketProductRepository.save(basketProduct);
+            return parse(basket,List.of(basketProduct));
         }else {
             Basket basket = new Basket();
             basket.setUser(user);
             basket.setCountProduct(count);
-            Basket save = basketRepository.save(basket);
-
-//            BasketProductDTO basketProductDTO = new BasketProductDTO();
-//            BasketResponseDTO basketResponseDTO = new BasketResponseDTO(basket.getUser().getId(), save.getId(),)
-
+            basketRepository.save(basket);
             BasketProduct basketProduct = new BasketProduct(basket,product,count);
             basketProductRepository.save(basketProduct);
+            return parse(basket,List.of(basketProduct));
         }
-        return null;
+    }
+
+    public BasketResponseDTO parse(Basket basket, List<BasketProduct> list){
+        double price = 0d;
+        for (BasketProduct basketProduct : list) {
+            price += basketProduct.getProduct().getPrice();
+        }
+        return  new BasketResponseDTO(basket.getUser().getId(), basket.getId(),parse(list),price );
     }
 
 }

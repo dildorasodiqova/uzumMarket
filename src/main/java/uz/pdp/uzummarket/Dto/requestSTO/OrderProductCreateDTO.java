@@ -14,11 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class OrderProductCreateDTO {
-    private UUID orderId;
-
     private UUID productId;
-
     private int count;
-
     private Double price;
 }
