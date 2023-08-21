@@ -138,12 +138,12 @@ public class CategoryServiceImpl implements CategoryService{
     public BaseResponse<List<CategoryResponseDTO>> subCategories(UUID parentId) {
         List<Category> categoriesByParentId = categoryRepository.getCategoriesByParent_Id(parentId);
         List<CategoryResponseDTO> parse = parse(categoriesByParentId);
-        return BaseResponse.<List<CategoryResponseDTO>>builder()
-                .message("success")
-                .data(parse)
-                .success(true)
-                .code(200)
-                .build();
+//        return BaseResponse.<List<CategoryResponseDTO>>builder()
+//                .message("success")
+//                .data(parse)
+//                .success(true)
+//                .code(200)
+//                .build();
     }
 
     public List<CategoryResponseDTO> parse(List<Category> category){
