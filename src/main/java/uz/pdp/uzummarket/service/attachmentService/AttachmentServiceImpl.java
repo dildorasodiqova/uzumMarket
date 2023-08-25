@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.entity.Attachment;
+import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.AttachmentRepository;
 
 import java.io.IOException;
@@ -35,6 +36,6 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public Attachment downloadImage(UUID fileId) throws RuntimeException {
-        return attachmentRepository.findById(fileId).orElseThrow();
+        return attachmentRepository.findById(fileId).orElseThrow(()-> new DataNotFoundException("Attachment not found"));
     }
 }

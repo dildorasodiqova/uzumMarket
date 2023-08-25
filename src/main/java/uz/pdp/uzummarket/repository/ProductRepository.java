@@ -14,4 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Page<Product> findAllByUserId(UUID sellerId, PageRequest of);
     void deleteById(UUID productId);
     List<Product> searchProductByCategory_NameOrNameContainingIgnoreCase(String category_name, String name);
+    List<Product> getProductsByCategory_IdAndUser_Id(UUID id, UUID sellerId);
 }

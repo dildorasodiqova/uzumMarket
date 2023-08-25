@@ -28,11 +28,11 @@ public class CategoryController {
     private ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> firstCategory(){
         return ResponseEntity.ok(categoryService.firstCategories());
     }
-    @GetMapping("getById/{categoryId}")
+    @GetMapping("/getById/{categoryId}")
     public ResponseEntity<BaseResponse<CategoryResponseDTO>> getById(@PathVariable UUID categoryId){
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
-    @PostMapping("/subCategories/{categoryId}")
+    @GetMapping("/sub/{categoryId}")
     public ResponseEntity<BaseResponse<List<CategoryResponseDTO>>> getSubCategories(@PathVariable UUID categoryId){
         return ResponseEntity.ok(categoryService.subCategories(categoryId));
     }

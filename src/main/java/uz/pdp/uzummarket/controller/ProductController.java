@@ -8,6 +8,8 @@ import uz.pdp.uzummarket.Dto.requestSTO.ProductCreateDTO;
 import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.Dto.responceDTO.ProductResponseDTO;
 import uz.pdp.uzummarket.service.productService.ProductService;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -41,6 +43,10 @@ public class ProductController {
                     @RequestParam(required = false, defaultValue = "0") int page
             ) {
         return ResponseEntity.ok(productService.getAll(sellerId,size, page));
+    }
+    @GetMapping("get-by-category/{categoryId}/{userId}")
+    public ResponseEntity<BaseResponse<List<ProductResponseDTO>>> getByCategory(@PathVariable UUID userId  ,@PathVariable UUID categoryId) {
+        return ResponseEntity.ok(productService.getAllByCategory(userId,categoryId));
     }
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<BaseResponse<String>> delete(@PathVariable UUID productId) {

@@ -21,10 +21,7 @@ import uz.pdp.uzummarket.repository.ProductRepository;
 import uz.pdp.uzummarket.service.categoryService.CategoryService;
 import uz.pdp.uzummarket.service.productPhotosService.ProductPhotosService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +36,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseResponse<ProductResponseDTO> save(ProductCreateDTO dto) {
         ProductResponseDTO product = createProduct(dto);
-        return BaseResponse.<ProductResponseDTO>builder()
+    System.out.println("product = " + product);
+    return BaseResponse.<ProductResponseDTO>builder()
                 .code(200)
                 .message("success")
                 .success(true)
@@ -53,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
         if (size <= 0 && page <= 0) {
             Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
             return BaseResponse.<Page<ProductResponseDTO>>builder()
-                    .data(parse(all.getContent()))
+                    .data(new PageImpl<>(parse(all.getContent())))
                     .message("success")
                     .code(200)
                     .success(true)
@@ -88,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     public BaseResponse<Page<ProductResponseDTO>> search(String word) {
         List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word, word);
         return BaseResponse.<Page<ProductResponseDTO>>builder()
-                .data(parse(products))
+                .data(new PageImpl<>(parse(products)))
                 .success(true)
                 .message("success")
                 .code(200)
@@ -165,7 +163,20 @@ public class ProductServiceImpl implements ProductService {
                 .code(200)
                 .build();
     }
-@Transactional
+
+    @Override
+    public BaseResponse<List<ProductResponseDTO>> getAllByCategory(UUID sellerId , UUID categoryId) {
+        List<Product> products = productRepository.getProductsByCategory_IdAndUser_Id(categoryId,sellerId);
+        return
+                BaseResponse.<List<ProductResponseDTO>>builder()
+                        .data(parse(products))
+                        .success(true)
+                        .message("success")
+                        .code(200)
+                        .build();
+    }
+
+    @Transactional
     public ProductResponseDTO createProduct(ProductCreateDTO dto) {
     BaseResponse<Category> id = categoryService.getByIdCategory(dto.getCategoryId());
     Product product = Product.builder()
@@ -176,9 +187,9 @@ public class ProductServiceImpl implements ProductService {
                 .price(dto.getPrice())
                 .build();
 
-        Product save = productRepository.save(product);
 
         List<Attachment> photos = attachmentRepository.findAllById(dto.getPhotos());
+        Product save = productRepository.save(product);
         List<ProductPhotos> list = new ArrayList<>();
         for (int i = 0; i < photos.size(); i++) {
             ProductPhotos productPhotos = new ProductPhotos();
@@ -199,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
         return productResponseDTO;
     }
 
-    public Page<ProductResponseDTO> parse(List<Product> product) {
+    public List<ProductResponseDTO> parse(List<Product> product) {
         ProductResponseDTO responseDto = new ProductResponseDTO();
         List<ProductResponseDTO> list = new ArrayList<>();
         for (Product product1 : product) {
@@ -215,7 +226,7 @@ public class ProductServiceImpl implements ProductService {
             responseDto.setCategoryId(product1.getCategory().getId());
             list.add(responseDto);
         }
-        return new  PageImpl<>(list);
+        return list;
     }
 
 
