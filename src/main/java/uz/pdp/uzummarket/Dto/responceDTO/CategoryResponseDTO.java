@@ -10,11 +10,9 @@ import java.util.UUID;
 @Setter
 @Builder
 public class CategoryResponseDTO {
-
     private UUID id;
     private String name;
     private boolean active;
-
     private UUID photoId;
     private UUID parentId;
 }
