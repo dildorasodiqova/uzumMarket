@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public BaseResponse<UserResponseDTO> create(UserCreateDTO userCreateDTO) {
         User user = createUser(userCreateDTO);
-        Optional<User> byId = userRepository.findById(user.getId());
+        Optional<User> byId = userRepository.findTop1ByEmail(user.getEmail());
         if (byId.isPresent()){
             throw new DataAlreadyExistsException("User already exists");
         }else {
