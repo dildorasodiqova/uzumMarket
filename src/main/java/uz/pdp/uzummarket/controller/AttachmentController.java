@@ -40,16 +40,9 @@ public class AttachmentController {
     }
 
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<BaseResponse<byte[]>> downloadImage(@PathVariable UUID fileId) {
+    public ResponseEntity<byte[]> downloadImage(@PathVariable UUID fileId) {
         Attachment attachment = attachmentService.downloadImage(fileId);
 
-        return ResponseEntity.ok(
-                BaseResponse.<byte[]>builder()
-                        .data(attachment.getBytes())
-                        .success(true)
-                        .message("success")
-                        .code(200)
-                        .build()
-        );
+        return ResponseEntity.ok(attachment.getBytes());
     }
 }

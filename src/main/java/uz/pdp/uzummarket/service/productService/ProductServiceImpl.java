@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public BaseResponse<List<ProductResponseDTO>> search(String word) {
-        List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word, word);
+        List<Product> products = productRepository.searchProductsByCategory_NameOrNameContainingIgnoreCase(word, word);
         return BaseResponse.<List<ProductResponseDTO>>builder()
                 .data(parse(products))
                 .success(true)
@@ -174,9 +174,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public BaseResponse<List<ProductResponseDTO>> getByCategory(UUID sellerId, UUID categoryId) {
+    public BaseResponse<List<ProductResponseDTO>> getByCategory( UUID categoryId) {
         return BaseResponse.<List<ProductResponseDTO>>builder()
-                .data(parse(productRepository.getProductsByCategory_IdAndUser_Id(categoryId,sellerId)))
+                .data(parse(productRepository.getProductsByCategory_Id(categoryId)))
                 .success(true)
                 .message("success")
                 .code(200)
