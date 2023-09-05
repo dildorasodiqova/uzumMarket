@@ -61,11 +61,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.search(word));
     }
 
-//    @GetMapping("/get-by-category/{sellerId}/{categoryId}")
-//    public ResponseEntity<BaseResponse<List<ProductResponseDTO>>> getByCategoryId(
-//            @PathVariable UUID sellerId,
-//            @PathVariable UUID categoryId
-//    ) {
-//        return ResponseEntity.ok(productService.getByCategory(sellerId,categoryId));
-//    }
+    @GetMapping("/get-by-category/{categoryId}")
+    public ResponseEntity<BaseResponse<List<ProductResponseDTO>>> getByCategoryId(
+            @PathVariable UUID categoryId
+    ) {
+        return ResponseEntity.ok(productService.getByCategory(categoryId));
+    }
 }

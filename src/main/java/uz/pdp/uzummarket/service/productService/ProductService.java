@@ -21,5 +21,5 @@ public interface ProductService {
     BaseResponse<Product> getById(UUID productId);
     BaseResponse<String> delete (UUID productId);
 
-    BaseResponse<List<ProductResponseDTO>> getByCategory(UUID sellerId, UUID categoryId);
+    BaseResponse<List<ProductResponseDTO>> getByCategory( UUID categoryId);
 }
