@@ -49,6 +49,7 @@ public class AttachmentController {
                         .success(true)
                         .message("success")
                         .code(200)
-                        .build());
+                        .build()
+        );
     }
 }

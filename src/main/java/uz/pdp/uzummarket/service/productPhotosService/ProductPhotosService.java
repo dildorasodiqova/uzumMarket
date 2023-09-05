@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface ProductPhotosService {
     BaseResponse<List<ProductPhotos>> getByProductId(UUID productId);
+
+    ProductPhotos save(ProductPhotos productPhotos);
 }
