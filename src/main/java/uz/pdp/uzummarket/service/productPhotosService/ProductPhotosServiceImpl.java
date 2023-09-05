@@ -22,4 +22,9 @@ public class ProductPhotosServiceImpl implements ProductPhotosService{
                 .build();
     }
 
+    @Override
+    public ProductPhotos save(ProductPhotos productPhotos) {
+        return productPhotosRepository.save(productPhotos);
+    }
+
 }

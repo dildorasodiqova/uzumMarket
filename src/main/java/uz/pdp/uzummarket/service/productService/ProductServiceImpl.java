@@ -2,9 +2,8 @@ package uz.pdp.uzummarket.service.productService;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.postgresql.util.PSQLException;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.uzummarket.Dto.requestSTO.ProductCreateDTO;
@@ -14,17 +13,17 @@ import uz.pdp.uzummarket.entity.Attachment;
 import uz.pdp.uzummarket.entity.Category;
 import uz.pdp.uzummarket.entity.Product;
 import uz.pdp.uzummarket.entity.ProductPhotos;
+import uz.pdp.uzummarket.exception.DataAlreadyExistsException;
 import uz.pdp.uzummarket.exception.DataNotFoundException;
 import uz.pdp.uzummarket.repository.AttachmentRepository;
 import uz.pdp.uzummarket.repository.ProductPhotosRepository;
 import uz.pdp.uzummarket.repository.ProductRepository;
+import uz.pdp.uzummarket.repository.UserRepository;
 import uz.pdp.uzummarket.service.categoryService.CategoryService;
 import uz.pdp.uzummarket.service.productPhotosService.ProductPhotosService;
+import uz.pdp.uzummarket.service.userService.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +34,17 @@ public class ProductServiceImpl implements ProductService {
     private final ProductPhotosRepository productPhotosRepository;
     private final ProductPhotosService productPhotosService;
     private final AttachmentRepository attachmentRepository;
+    private final UserRepository userRepository;
 @Transactional
     @Override
-    public BaseResponse<ProductResponseDTO> save(ProductCreateDTO dto) {
-        ProductResponseDTO product = createProduct(dto);
-        return BaseResponse.<ProductResponseDTO>builder()
+    public BaseResponse save(ProductCreateDTO dto) {
+    ProductResponseDTO product = null;
+    try {
+        product = createProduct(dto);
+    } catch (PSQLException e) {
+       throw new DataNotFoundException("Product already exists");
+    }
+    return BaseResponse.<ProductResponseDTO>builder()
                 .code(200)
                 .message("success")
                 .success(true)
@@ -49,35 +54,37 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public BaseResponse<Page<ProductResponseDTO>> getAll(UUID sellerId , int size, int page) {
-        if (size <= 0 && page <= 0) {
-            Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
-            return BaseResponse.<Page<ProductResponseDTO>>builder()
-                    .data(parse(all.getContent()))
-                    .message("success")
-                    .code(200)
-                    .success(true)
-                    .build();
-        }
-        Page<Product> all = productRepository.findAll(PageRequest.of(page, size));
+    public BaseResponse<List<ProductResponseDTO>> getAll(UUID userId ,UUID categoryId, int size, int page) {
+//        if (size <= 0 && page <= 0) {
+//            List<Product> all = productRepository.findAllByUserIdAndCategory_id(userId,categoryId);
+//            System.out.println("all = " + all.toString());
+//            return BaseResponse.<List<ProductResponseDTO>>builder()
+//                    .data(parse(all))
+//                    .message("success")
+//                    .code(200)
+//                    .success(true)
+//                    .build();
+//        }
+        List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId,categoryId);
+
+//        Page<Product> all = productRepository.findAllByUserIdAndCategoryId(userId,categoryId,PageRequest.of(page, size));
 //  1  public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
 //   1     Page<Product> all = productRepository.findAllByUserId(sellerId,PageRequest.of(page, size));
         List<ProductResponseDTO> responseDtos = new ArrayList<>();
-        for (Product product : all.getContent()) {
+        for (Product product : all) {
             ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
             map.setId(product.getId());
 
             BaseResponse<List<ProductPhotos>> photos = productPhotosService.getByProductId(product.getId());
             List<UUID> uuids = new ArrayList<>();
             for (ProductPhotos productPhotos : photos.getData()) {
-                uuids.add(productPhotos.getId());
+                uuids.add(productPhotos.getPhoto().getId());
             }
             map.setPhotos(uuids);
             responseDtos.add(map);
-
         }
-        return BaseResponse.<Page<ProductResponseDTO>>builder()
-                .data(new PageImpl<>(responseDtos))
+        return BaseResponse.<List<ProductResponseDTO>>builder()
+                .data(responseDtos)
                 .message("success")
                 .success(true)
                 .code(200)
@@ -85,9 +92,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public BaseResponse<Page<ProductResponseDTO>> search(String word) {
+    public BaseResponse<List<ProductResponseDTO>> search(String word) {
         List<Product> products = productRepository.searchProductByCategory_NameOrNameContainingIgnoreCase(word, word);
-        return BaseResponse.<Page<ProductResponseDTO>>builder()
+        return BaseResponse.<List<ProductResponseDTO>>builder()
                 .data(parse(products))
                 .success(true)
                 .message("success")
@@ -165,14 +172,30 @@ public class ProductServiceImpl implements ProductService {
                 .code(200)
                 .build();
     }
-@Transactional
-    public ProductResponseDTO createProduct(ProductCreateDTO dto) {
-    BaseResponse<Category> id = categoryService.getByIdCategory(dto.getCategoryId());
+
+    @Override
+    public BaseResponse<List<ProductResponseDTO>> getByCategory(UUID sellerId, UUID categoryId) {
+        return BaseResponse.<List<ProductResponseDTO>>builder()
+                .data(parse(productRepository.getProductsByCategory_IdAndUser_Id(categoryId,sellerId)))
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
+    }
+
+    @Transactional
+    public ProductResponseDTO createProduct(ProductCreateDTO dto) throws PSQLException {
+        System.out.println("dto = " + dto);
+        if(productRepository.findByName(dto.getName()).isPresent()){
+            throw new DataAlreadyExistsException("Product already exists");
+        }
+        BaseResponse<Category> id = categoryService.getByIdCategory(dto.getCategoryId());
     Product product = Product.builder()
                 .category(id.getData())
                 .count(dto.getCount())
                 .description(dto.getDescription())
                 .name(dto.getName())
+                .user(userRepository.findById(dto.getSellerId()).get())
                 .price(dto.getPrice())
                 .build();
 
@@ -185,8 +208,11 @@ public class ProductServiceImpl implements ProductService {
             productPhotos.setProduct(save);
             productPhotos.setPhoto(photos.get(i));
             productPhotos.setOrderIndex(i);
+            productPhotosService.save(productPhotos);
             list.add(productPhotos);
         }
+
+        List<UUID> photosId = getPhotosId(list);
 
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
         productResponseDTO.setCount(save.getCount());
@@ -194,12 +220,12 @@ public class ProductServiceImpl implements ProductService {
         productResponseDTO.setPrice(save.getPrice());
         productResponseDTO.setName(save.getName());
         productResponseDTO.setId(save.getId());
-        productResponseDTO.setPhotos(dto.getPhotos());
+        productResponseDTO.setPhotos(photosId);
         productResponseDTO.setCategoryId(save.getCategory().getId());
         return productResponseDTO;
     }
 
-    public Page<ProductResponseDTO> parse(List<Product> product) {
+    public List<ProductResponseDTO> parse(List<Product> product) {
         ProductResponseDTO responseDto = new ProductResponseDTO();
         List<ProductResponseDTO> list = new ArrayList<>();
         for (Product product1 : product) {
@@ -215,7 +241,7 @@ public class ProductServiceImpl implements ProductService {
             responseDto.setCategoryId(product1.getCategory().getId());
             list.add(responseDto);
         }
-        return new  PageImpl<>(list);
+        return list;
     }
 
 

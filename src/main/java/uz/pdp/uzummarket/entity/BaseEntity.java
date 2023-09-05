@@ -22,17 +22,17 @@ import java.util.UUID;
 public abstract class BaseEntity {
     @Id
     @GeneratedValue
-    private UUID id;
+    protected UUID id;
 
     @CreationTimestamp
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime cratedDate;
+    protected LocalDateTime cratedDate;
 
 
     @UpdateTimestamp
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime lastUpdateDate;
+    protected LocalDateTime lastUpdateDate;
 
 }

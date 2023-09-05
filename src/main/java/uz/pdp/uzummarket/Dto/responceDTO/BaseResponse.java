@@ -1,6 +1,7 @@
 package uz.pdp.uzummarket.Dto.responceDTO;
 
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
