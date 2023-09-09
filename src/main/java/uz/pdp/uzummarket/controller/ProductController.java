@@ -58,7 +58,8 @@ public class ProductController {
 
     @GetMapping("/search")
     public ResponseEntity<BaseResponse<List<ProductResponseDTO>>> search(@RequestParam String word) {
-        return ResponseEntity.ok(productService.search(word));
+        BaseResponse<List<ProductResponseDTO>> response = productService.search(word);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/get-by-category/{categoryId}")
