@@ -56,32 +56,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public BaseResponse<List<ProductResponseDTO>> getAll(UUID userId, UUID categoryId, int size, int page) {
-//        if (size <= 0 && page <= 0) {
-//            List<Product> all = productRepository.findAllByUserIdAndCategory_id(userId,categoryId);
-//            System.out.println("all = " + all.toString());
-//            return BaseResponse.<List<ProductResponseDTO>>builder()
-//                    .data(parse(all))
-//                    .message("success")
-//                    .code(200)
-//                    .success(true)
-//                    .build();
-//        }
-        List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId, categoryId);
-        List<ProductResponseDTO> responseDtos = new ArrayList<>();
-        for (Product product : all) {
-            ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
-            map.setId(product.getId());
 
-            BaseResponse<List<ProductPhotos>> photos = productPhotosService.getByProductId(product.getId());
-            List<UUID> uuids = new ArrayList<>();
-            for (ProductPhotos productPhotos : photos.getData()) {
-                uuids.add(productPhotos.getPhoto().getId());
-            }
-            map.setPhotos(uuids);
-            responseDtos.add(map);
-        }
+        List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId, categoryId);
+        List<ProductResponseDTO> parse = parse(all);
         return BaseResponse.<List<ProductResponseDTO>>builder()
-                .data(responseDtos)
+                .data(parse)
                 .message("success")
                 .success(true)
                 .code(200)
@@ -91,8 +70,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseResponse<List<ProductResponseDTO>> search(String word) {
         List<Product> products = productRepository.searchProductByNameOrCategoryName(word);
+        List<ProductResponseDTO> parse = parse(products);
         return BaseResponse.<List<ProductResponseDTO>>builder()
-                .data(parse(products))
+                .data(parse)
                 .success(true)
                 .message("success")
                 .code(200)
@@ -155,7 +135,7 @@ public class ProductServiceImpl implements ProductService {
     public List<UUID> getPhotosId(List<ProductPhotos> productPhotos) {
         List<UUID> list = new ArrayList<>();
         for (ProductPhotos productPhoto : productPhotos) {
-            list.add(productPhoto.getId());
+            list.add(productPhoto.getPhoto().getId());
         }
         return list;
     }
@@ -224,21 +204,30 @@ public class ProductServiceImpl implements ProductService {
         return productResponseDTO;
     }
 
-    public List<ProductResponseDTO> parse(List<Product> product) {
+    public List<ProductResponseDTO> parse(List<Product> products) {
+/*List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId, categoryId);
+        List<ProductResponseDTO> responseDtos = new ArrayList<>();
+        for (Product product : all) {
+            ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
+            map.setId(product.getId());
+
+            BaseResponse<List<ProductPhotos>> photos = productPhotosService.getByProductId(product.getId());
+            List<UUID> uuids = new ArrayList<>();
+            for (ProductPhotos productPhotos : photos.getData()) {
+                uuids.add(productPhotos.getPhoto().getId());
+            }
+            map.setPhotos(uuids);
+            responseDtos.add(map);
+        }
+     **/
         List<ProductResponseDTO> list = new ArrayList<>();
-        for (Product product1 : product) {
-            ProductResponseDTO responseDto = new ProductResponseDTO();
-            responseDto.setDescription(product1.getDescription());
-            responseDto.setName(product1.getName());
-            responseDto.setPrice(product1.getPrice());
-            responseDto.setCount(product1.getCount());
-            responseDto.setId(product1.getId());
-
-            List<UUID> photosId = getPhotosId(productPhotosService.getByProductId(product1.getId()).getData());
-
-            responseDto.setPhotos(photosId);
-            responseDto.setCategoryId(product1.getCategory().getId());
-            list.add(responseDto);
+        for (Product product : products) {
+            ProductResponseDTO map = modelMapper.map(product,ProductResponseDTO.class);
+            map.setId(product.getId());
+            BaseResponse<List<ProductPhotos>> byProductId = productPhotosService.getByProductId(product.getId());
+            List<UUID> photosId = getPhotosId(byProductId.getData());
+            map.setPhotos(photosId);
+            list.add(map);
         }
         return list;
     }
