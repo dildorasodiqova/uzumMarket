@@ -35,16 +35,17 @@ public class ProductServiceImpl implements ProductService {
     private final ProductPhotosService productPhotosService;
     private final AttachmentRepository attachmentRepository;
     private final UserRepository userRepository;
-@Transactional
+
+    @Transactional
     @Override
     public BaseResponse save(ProductCreateDTO dto) {
-    ProductResponseDTO product = null;
-    try {
-        product = createProduct(dto);
-    } catch (PSQLException e) {
-       throw new DataNotFoundException("Product already exists");
-    }
-    return BaseResponse.<ProductResponseDTO>builder()
+        ProductResponseDTO product = null;
+        try {
+            product = createProduct(dto);
+        } catch (PSQLException e) {
+            throw new DataNotFoundException("Product already exists");
+        }
+        return BaseResponse.<ProductResponseDTO>builder()
                 .code(200)
                 .message("success")
                 .success(true)
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public BaseResponse<List<ProductResponseDTO>> getAll(UUID userId ,UUID categoryId, int size, int page) {
+    public BaseResponse<List<ProductResponseDTO>> getAll(UUID userId, UUID categoryId, int size, int page) {
 //        if (size <= 0 && page <= 0) {
 //            List<Product> all = productRepository.findAllByUserIdAndCategory_id(userId,categoryId);
 //            System.out.println("all = " + all.toString());
@@ -65,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 //                    .success(true)
 //                    .build();
 //        }
-        List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId,categoryId);
+        List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId, categoryId);
 
 //        Page<Product> all = productRepository.findAllByUserIdAndCategoryId(userId,categoryId,PageRequest.of(page, size));
 //  1  public Page<ProductResponseDTO > getAll(UUID sellerId,int size, int page) {
@@ -93,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public BaseResponse<List<ProductResponseDTO>> search(String word) {
-        List<Product> products = productRepository.searchProductsByCategory_NameOrNameContainingIgnoreCase(word, word);
+        List<Product> products = productRepository.searchProductByNameOrCategoryName(word);
         return BaseResponse.<List<ProductResponseDTO>>builder()
                 .data(parse(products))
                 .success(true)
@@ -102,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-@Transactional
+    @Transactional
     @Override
     public BaseResponse<ProductResponseDTO> update(UUID productId, ProductCreateDTO dto) {
         Optional<Product> byId = productRepository.findById(productId);
@@ -141,7 +142,8 @@ public class ProductServiceImpl implements ProductService {
                 .success(true)
                 .build();
     }
-@Transactional
+
+    @Transactional
     @Override
     public BaseResponse<Product> getById(UUID productId) {
         Optional<Product> byId = productRepository.findById(productId);
@@ -152,7 +154,8 @@ public class ProductServiceImpl implements ProductService {
                 .data(byId.get())
                 .build();
     }
-@Transactional
+
+    @Transactional
     public List<UUID> getPhotosId(List<ProductPhotos> productPhotos) {
         List<UUID> list = new ArrayList<>();
         for (ProductPhotos productPhoto : productPhotos) {
@@ -174,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public BaseResponse<List<ProductResponseDTO>> getByCategory( UUID categoryId) {
+    public BaseResponse<List<ProductResponseDTO>> getByCategory(UUID categoryId) {
         return BaseResponse.<List<ProductResponseDTO>>builder()
                 .data(parse(productRepository.getProductsByCategory_Id(categoryId)))
                 .success(true)
@@ -186,11 +189,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponseDTO createProduct(ProductCreateDTO dto) throws PSQLException {
         System.out.println("dto = " + dto);
-        if(productRepository.findByName(dto.getName()).isPresent()){
+        if (productRepository.findByName(dto.getName()).isPresent()) {
             throw new DataAlreadyExistsException("Product already exists");
         }
         BaseResponse<Category> id = categoryService.getByIdCategory(dto.getCategoryId());
-    Product product = Product.builder()
+        Product product = Product.builder()
                 .category(id.getData())
                 .count(dto.getCount())
                 .description(dto.getDescription())
@@ -226,9 +229,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<ProductResponseDTO> parse(List<Product> product) {
-        ProductResponseDTO responseDto = new ProductResponseDTO();
         List<ProductResponseDTO> list = new ArrayList<>();
         for (Product product1 : product) {
+            ProductResponseDTO responseDto = new ProductResponseDTO();
             responseDto.setDescription(product1.getDescription());
             responseDto.setName(product1.getName());
             responseDto.setPrice(product1.getPrice());
