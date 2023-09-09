@@ -13,9 +13,9 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
   datasource:
-    url: jdbc:postgresql://localhost:5432/UzumMarket
+    url: jdbc:postgresql://localhost:5432/uzumMarket
     username: postgres
-    password: 2006
+    password: 2004
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
