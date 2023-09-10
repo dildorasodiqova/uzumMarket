@@ -59,15 +59,6 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> all = productRepository.getAllByUserIdAndCategory_id(userId, categoryId);
         List<ProductResponseDTO> parse = parse(all);
-
-//        List<ProductResponseDTO> responseDtos = new ArrayList<>();
-//        for (Product product : all) {
-//            ProductResponseDTO map = modelMapper.map(product, ProductResponseDTO.class);
-//            map.setId(product.getId());
-//            List<UUID> photosId = getPhotosId(productPhotosService.getByProductId(product.getId()).getData());
-//            map.setPhotos(photosId);
-//            responseDtos.add(map);
-//        }
         return BaseResponse.<List<ProductResponseDTO>>builder()
                 .data(parse)
                 .message("success")

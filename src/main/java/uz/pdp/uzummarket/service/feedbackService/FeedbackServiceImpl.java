@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import uz.pdp.uzummarket.Dto.requestSTO.FeedBackCreateDTO;
+import uz.pdp.uzummarket.Dto.responceDTO.BaseResponse;
 import uz.pdp.uzummarket.Dto.responceDTO.FeedbackResponseDTO;
 import uz.pdp.uzummarket.entity.Feedback;
 import uz.pdp.uzummarket.entity.Product;
@@ -25,13 +26,18 @@ public class FeedbackServiceImpl  implements FeedbackService{
     private final ProductRepository productRepository;
 
     @Override
-    public FeedbackResponseDTO create(FeedBackCreateDTO dto) {
+    public BaseResponse<FeedbackResponseDTO> create(FeedBackCreateDTO dto) {
         Optional<Product> product = productRepository.findById(dto.getProductId());
         Optional<User> user = userRepository.findById(dto.getUserId());
 
         Feedback feedback = new Feedback(product.get(),user.get(), dto.getRate(), dto.getText());
         Feedback save = feedBackRepository.save(feedback);
-        return parse(save);
+        return BaseResponse.<FeedbackResponseDTO>builder()
+                .data(parse(save))
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
     }
     private FeedbackResponseDTO parse(Feedback dto){
         FeedbackResponseDTO feedbackResponseDTO = new FeedbackResponseDTO(dto.getProduct().getId(),dto.getUser().getFirstName(), dto.getRate(),dto.getText());
@@ -39,26 +45,43 @@ public class FeedbackServiceImpl  implements FeedbackService{
     }
 
     @Override
-    public FeedbackResponseDTO findById(UUID feedbackId) {
+    public BaseResponse<FeedbackResponseDTO> findById(UUID feedbackId) {
         Feedback feedback = feedBackRepository.findById(feedbackId).orElseThrow(() -> new DataNotFoundException("Feedback not found"));
         FeedbackResponseDTO parse = parse(feedback);
-        return parse;
+        return BaseResponse.<FeedbackResponseDTO>builder()
+                .data(parse)
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
     }
 
     @Override
-    public List<FeedbackResponseDTO> getByProductId(UUID productId) {
+    public BaseResponse<List<FeedbackResponseDTO>> getByProductId(UUID productId) {
         List<Feedback> allByProductId = feedBackRepository.findAllByProductId(productId);
         List<FeedbackResponseDTO> list = new ArrayList<>();
         for (Feedback feedback : allByProductId) {
             FeedbackResponseDTO parse = parse(feedback);
             list.add(parse);
         }
-        return list;
+        return BaseResponse.<List<FeedbackResponseDTO>>builder()
+                .data(list)
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
+
     }
 
     @Override
-    public void delete(UUID feedbackId) {
+    public BaseResponse<String> delete(UUID feedbackId) {
         Feedback feedback = feedBackRepository.findById(feedbackId).orElseThrow(() -> new DataNotFoundException("Feedback not found !"));
         feedBackRepository.delete(feedback);
+        return BaseResponse.<String>builder()
+                .data("Successfully")
+                .success(true)
+                .message("success")
+                .code(200)
+                .build();
     }
 }
