@@ -36,4 +36,8 @@ public class FeedbackController {
     public ResponseEntity<BaseResponse<List<FeedbackResponseDTO>>> feedbackOfProduct(@PathVariable UUID productId){
         return ResponseEntity.ok(feedbackService.getByProductId(productId));
     }
+
+
+
+
 }
